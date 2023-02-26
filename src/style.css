@@ -1,6 +1,6 @@
 body{
     height: 100vh;
-    margin:0
+    margin:0;
     /* background-color: red; */
 }
 #content{
@@ -14,18 +14,29 @@ body{
     "footer footer footer";
     text-align: center;
 }
+/* HEADER PART */
 .header{
     background-color: red;
     grid-area: header;
     
 }
+/* SIDEBAR PART */
 .sidebar{
     background-color: blue;
     grid-area: sidebar;
 }
+.default-projects, .new-projects{
+    display: flex;
+    flex-direction: column;
+}
+.new-projects{
+
+}
+/* MAIN PART */
 .main{
     grid-area: main;
 }
+/* FOOTER PART */
 .footer{
     background-color: green;
     grid-area: footer;
