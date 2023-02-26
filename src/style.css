@@ -1,0 +1,32 @@
+body{
+    height: 100vh;
+    margin:0
+    /* background-color: red; */
+}
+#content{
+    height:100%;
+    display:grid;
+    grid-template-columns: 1fr 5fr;
+    grid-template-rows: 1fr 9fr 1fr;
+    grid-template-areas: 
+    "header header header"
+    "sidebar main main"
+    "footer footer footer";
+    text-align: center;
+}
+.header{
+    background-color: red;
+    grid-area: header;
+    
+}
+.sidebar{
+    background-color: blue;
+    grid-area: sidebar;
+}
+.main{
+    grid-area: main;
+}
+.footer{
+    background-color: green;
+    grid-area: footer;
+}
