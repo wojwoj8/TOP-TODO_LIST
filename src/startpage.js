@@ -24,9 +24,11 @@ function createSidebar() {
 
   today.textContent = 'Today';
   today.classList = 'default-project-butt';
+  today.setAttribute('id', 'today');
 
   thisWeek.textContent = 'This Week';
   thisWeek.classList = 'default-project-butt';
+  thisWeek.setAttribute('id', 'thisWeek');
 
   newProjectsDiv.classList = 'new-projects';
   defaultDiv.classList = 'default-projects';
@@ -35,9 +37,11 @@ function createSidebar() {
 
   addproject.textContent = 'Add Project';
   addproject.classList = 'add-project-butt';
+  addproject.setAttribute('id', 'add-project');
 
   inbox.textContent = 'Inbox';
   inbox.classList = 'default-project-butt';
+  inbox.setAttribute('id', 'inbox');
 
   defaultDiv.appendChild(inbox);
   defaultDiv.appendChild(today);
@@ -57,14 +61,16 @@ function getButtName() {
   const buttons = document.querySelectorAll('button');
   buttons.forEach((e) => {
     e.addEventListener('click', () => {
+      if (e.innerHTML === 'Add Project') {
+        return;
+      }
       title.textContent = e.innerHTML;
-      return title;
     });
   });
 }
 function createMain() {
   const main = document.createElement('div');
-  const mainProjectTitle = document.createElement('h1');
+  const mainProjectTitle = document.createElement('h2');
 
   mainProjectTitle.classList = 'main-title';
   mainProjectTitle.textContent = '';
@@ -77,10 +83,67 @@ function createMain() {
 function createFooter() {
   const footer = document.createElement('div');
   //   const createdBy = document.createElement('p');
-  footer.innerHTML = '<p>Created by <a href="https://github.com/wojwoj8">Wojwoj8</a></p>';
+  footer.innerHTML = '<p>Created by <a href="https://github.com/wojwoj8">wojwoj8</a></p>';
   //   createdBy.textContent = 'Created By '
   footer.classList = 'footer';
   return footer;
+}
+
+function createAddToDo() {
+
+}
+
+function createAddProject() {
+  const inputDiv = document.createElement('div');
+  const buttDiv = document.createElement('div');
+  const addProjectButt = document.getElementById('add-project');
+  const addProject = document.querySelector('.new-projects');
+  const inputField = document.createElement('input');
+  const addButt = document.createElement('button');
+  const cancelButt = document.createElement('button');
+
+  inputDiv.setAttribute('id', 'input-div');
+  buttDiv.setAttribute('id', 'butt-div');
+  addButt.setAttribute('id', 'butt-add');
+  addButt.textContent = 'Add';
+  cancelButt.textContent = 'Cancel';
+  cancelButt.setAttribute('id', 'butt-cancel');
+
+  addProjectButt.addEventListener('click', () => {
+    console.log('test');
+    inputDiv.appendChild(inputField);
+    buttDiv.appendChild(addButt);
+    buttDiv.appendChild(cancelButt);
+    inputDiv.appendChild(buttDiv);
+    addProject.appendChild(inputDiv);
+    addProjectButt.style.display = 'none';
+
+    cancelButt.addEventListener('click', () => {
+      console.log('test cancel');
+      addProjectButt.style.display = 'grid';
+      inputField.value = '';
+      inputDiv.remove();
+    }, { once: true });
+
+    addButt.addEventListener('click', () => {
+      console.log('test add');
+      // console.log(inputField.value);
+      const currentInput = inputField.value;
+      if (currentInput !== '') {
+        const newButt = document.createElement('button');
+        newButt.classList = 'new-proj-butt';
+        newButt.textContent = inputField.value;
+        addProjectButt.style.display = 'grid';
+        addProject.appendChild(newButt);
+        inputField.value = '';
+        inputDiv.remove();
+      } else {
+        // console.log(currentInput);
+        console.log('alert');
+        // alert('Project name cannot be empty');
+      }
+    }, { once: true });
+  });
 }
 
 function webInit() {
@@ -90,6 +153,7 @@ function webInit() {
   content.appendChild(createMain());
   content.appendChild(createFooter());
   getButtName();
+  createAddProject();
   return content;
 }
 export default webInit;
