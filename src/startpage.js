@@ -109,8 +109,38 @@ function createAddProject() {
   cancelButt.textContent = 'Cancel';
   cancelButt.setAttribute('id', 'butt-cancel');
 
+  const cancelListener = () => {
+    // console.log('test cancel');
+    addProjectButt.style.display = 'grid';
+    inputField.value = '';
+    inputDiv.remove();
+    cancelButt.removeEventListener('click', cancelListener);
+    addButt.removeEventListener('click', addListener);
+  };
+
+  const addListener = () => {
+    // console.log('test add');
+    // console.log(inputField.value);
+    const currentInput = inputField.value;
+    if (currentInput !== '') {
+      const newButt = document.createElement('button');
+      newButt.classList = 'new-proj-butt';
+      newButt.textContent = inputField.value;
+      addProjectButt.style.display = 'grid';
+      addProject.appendChild(newButt);
+      inputField.value = '';
+      inputDiv.remove();
+      cancelButt.removeEventListener('click', cancelListener);
+      addButt.removeEventListener('click', addListener);
+    } else {
+      // console.log(currentInput);
+      console.log('alert');
+      alert('Project name cannot be empty');
+    }
+  };
+
   addProjectButt.addEventListener('click', () => {
-    console.log('test');
+    // console.log('test');
     inputDiv.appendChild(inputField);
     buttDiv.appendChild(addButt);
     buttDiv.appendChild(cancelButt);
@@ -118,31 +148,8 @@ function createAddProject() {
     addProject.appendChild(inputDiv);
     addProjectButt.style.display = 'none';
 
-    cancelButt.addEventListener('click', () => {
-      console.log('test cancel');
-      addProjectButt.style.display = 'grid';
-      inputField.value = '';
-      inputDiv.remove();
-    }, { once: true });
-
-    addButt.addEventListener('click', () => {
-      console.log('test add');
-      // console.log(inputField.value);
-      const currentInput = inputField.value;
-      if (currentInput !== '') {
-        const newButt = document.createElement('button');
-        newButt.classList = 'new-proj-butt';
-        newButt.textContent = inputField.value;
-        addProjectButt.style.display = 'grid';
-        addProject.appendChild(newButt);
-        inputField.value = '';
-        inputDiv.remove();
-      } else {
-        // console.log(currentInput);
-        console.log('alert');
-        // alert('Project name cannot be empty');
-      }
-    }, { once: true });
+    cancelButt.addEventListener('click', cancelListener);
+    addButt.addEventListener('click', addListener);
   });
 }
 
