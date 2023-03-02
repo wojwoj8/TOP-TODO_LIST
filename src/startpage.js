@@ -1,5 +1,8 @@
 import { toDate } from 'date-fns';
 import Todos from './scripts';
+import {
+  createAddProject, Project, getButtName, ProjectsList,
+} from './project';
 
 function createHeader() {
   const header = document.createElement('div');
@@ -54,20 +57,12 @@ function createSidebar() {
   sidebar.appendChild(defaultDiv);
   sidebar.appendChild(newProjectsDiv);
 
+  // projects.getName('inbox');
+
   return sidebar;
+  // return { sidebar, projects };
 }
-function getButtName() {
-  const title = document.querySelector('.main-title');
-  const buttons = document.querySelectorAll('button');
-  buttons.forEach((e) => {
-    e.addEventListener('click', () => {
-      if (e.innerHTML === 'Add Project') {
-        return;
-      }
-      title.textContent = e.innerHTML;
-    });
-  });
-}
+
 function createMain() {
   const main = document.createElement('div');
   const mainProjectTitle = document.createElement('h2');
@@ -89,69 +84,9 @@ function createFooter() {
   return footer;
 }
 
-function createAddToDo() {
-
-}
-
-function createAddProject() {
-  const inputDiv = document.createElement('div');
-  const buttDiv = document.createElement('div');
-  const addProjectButt = document.getElementById('add-project');
-  const addProject = document.querySelector('.new-projects');
-  const inputField = document.createElement('input');
-  const addButt = document.createElement('button');
-  const cancelButt = document.createElement('button');
-
-  inputDiv.setAttribute('id', 'input-div');
-  buttDiv.setAttribute('id', 'butt-div');
-  addButt.setAttribute('id', 'butt-add');
-  addButt.textContent = 'Add';
-  cancelButt.textContent = 'Cancel';
-  cancelButt.setAttribute('id', 'butt-cancel');
-
-  const cancelListener = () => {
-    // console.log('test cancel');
-    addProjectButt.style.display = 'grid';
-    inputField.value = '';
-    inputDiv.remove();
-    cancelButt.removeEventListener('click', cancelListener);
-    addButt.removeEventListener('click', addListener);
-  };
-
-  const addListener = () => {
-    // console.log('test add');
-    // console.log(inputField.value);
-    const currentInput = inputField.value;
-    if (currentInput !== '') {
-      const newButt = document.createElement('button');
-      newButt.classList = 'new-proj-butt';
-      newButt.textContent = inputField.value;
-      addProjectButt.style.display = 'grid';
-      addProject.appendChild(newButt);
-      inputField.value = '';
-      inputDiv.remove();
-      cancelButt.removeEventListener('click', cancelListener);
-      addButt.removeEventListener('click', addListener);
-    } else {
-      // console.log(currentInput);
-      console.log('alert');
-      alert('Project name cannot be empty');
-    }
-  };
-
-  addProjectButt.addEventListener('click', () => {
-    // console.log('test');
-    inputDiv.appendChild(inputField);
-    buttDiv.appendChild(addButt);
-    buttDiv.appendChild(cancelButt);
-    inputDiv.appendChild(buttDiv);
-    addProject.appendChild(inputDiv);
-    addProjectButt.style.display = 'none';
-
-    cancelButt.addEventListener('click', cancelListener);
-    addButt.addEventListener('click', addListener);
-  });
-}
+// function createAddToDo() {
+//   const
+// }
 
 function webInit() {
   const content = document.querySelector('#content');
@@ -161,6 +96,7 @@ function webInit() {
   content.appendChild(createFooter());
   getButtName();
   createAddProject();
+
   return content;
 }
 export default webInit;
