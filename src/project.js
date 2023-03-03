@@ -19,10 +19,7 @@ const ProjectsList = (() => {
   const projects = [];
 
   const getProject = (projectName) => projects.find((project) => project.getName() === projectName);
-  const addProject = (projectName) => {
-    projects.push(projectName);
-    console.log('dodano');
-  };
+  const addProject = (projectName) => projects.push(projectName);
   const list = () => console.log(projects);
 
   addProject(Project('Inbox'));
@@ -33,18 +30,19 @@ const ProjectsList = (() => {
     getProject, addProject, list,
   };
 })();
+
 function getButtName() {
   const title = document.querySelector('.main-title');
-  const buttons = document.querySelectorAll('button');
+  const buttons = document.querySelectorAll('[data-projectbutt]');
+
   buttons.forEach((e) => {
-    e.addEventListener('click', () => {
-      // ProjectsList().list();
-      // console.log(ProjectsList().getProject(e.innerHTML));
-      if (e.innerHTML === 'Add Project') {
-        return;
-      }
-      title.textContent = e.innerHTML;
-    });
+    if (!e.hasAttribute('data-clicked')) {
+      e.setAttribute('data-clicked', 'true');
+      e.addEventListener('click', () => {
+        title.textContent = e.innerHTML;
+        console.log(e.innerHTML);
+      });
+    }
   });
 }
 function setButtName() {
@@ -86,10 +84,12 @@ function createAddProject() {
       const newButt = document.createElement('button');
       newButt.classList = 'new-proj-butt';
       newButt.textContent = inputField.value;
+      newButt.dataset.projectbutt = '';
       addProjectButt.style.display = 'grid';
       addProject.appendChild(newButt);
       inputField.value = '';
       inputDiv.remove();
+      getButtName();
       // projectList(newButt.textContent);
       ProjectsList.addProject(Project(newButt.textContent));
       // const newProject = Project(newButt.textContent);

@@ -28,10 +28,12 @@ function createSidebar() {
   today.textContent = 'Today';
   today.classList = 'default-project-butt';
   today.setAttribute('id', 'today');
+  today.dataset.projectbutt = '';
 
   thisWeek.textContent = 'This Week';
   thisWeek.classList = 'default-project-butt';
   thisWeek.setAttribute('id', 'thisWeek');
+  thisWeek.dataset.projectbutt = '';
 
   newProjectsDiv.classList = 'new-projects';
   defaultDiv.classList = 'default-projects';
@@ -45,6 +47,7 @@ function createSidebar() {
   inbox.textContent = 'Inbox';
   inbox.classList = 'default-project-butt';
   inbox.setAttribute('id', 'inbox');
+  inbox.dataset.projectbutt = '';
 
   defaultDiv.appendChild(inbox);
   defaultDiv.appendChild(today);
