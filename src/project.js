@@ -20,6 +20,10 @@ const ProjectsList = (() => {
 
   const getProject = (projectName) => projects.find((project) => project.getName() === projectName);
   const addProject = (projectName) => projects.push(projectName);
+  const removeProject = (projectName) => {
+    const delojb = getProject(projectName);
+    projects.splice(projects.indexOf(delojb), 1);
+  };
   const list = () => console.log(projects);
 
   addProject(Project('Inbox'));
@@ -27,7 +31,7 @@ const ProjectsList = (() => {
   addProject(Project('This Week'));
 
   return {
-    getProject, addProject, list,
+    getProject, addProject, removeProject, list,
   };
 })();
 
@@ -39,18 +43,14 @@ function getButtName() {
     if (!e.hasAttribute('data-clicked')) {
       e.setAttribute('data-clicked', 'true');
       e.addEventListener('click', () => {
+        ProjectsList.list();
         title.textContent = e.innerHTML;
-        console.log(e.innerHTML);
+        // console.log(e.innerHTML);
       });
     }
   });
 }
-function setButtName() {
 
-}
-function getProjectsName() {
-
-}
 function createAddProject() {
   const inputDiv = document.createElement('div');
   const buttDiv = document.createElement('div');
@@ -80,23 +80,31 @@ function createAddProject() {
     // console.log('test add');
     // console.log(inputField.value);
     const currentInput = inputField.value;
-    if (currentInput !== '') {
+    if (ProjectsList.getProject(currentInput)) {
+      alert('Project name cannot repeat');
+    } else if (currentInput !== '') {
       const newButt = document.createElement('button');
+      const remButt = document.createElement('button');
+      const projDiv = document.createElement('div');
       newButt.classList = 'new-proj-butt';
       newButt.textContent = inputField.value;
       newButt.dataset.projectbutt = '';
+      remButt.textContent = 'X';
+      remButt.addEventListener('click', removeNewProject);
+      projDiv.appendChild(newButt);
+      projDiv.appendChild(remButt);
       addProjectButt.style.display = 'grid';
-      addProject.appendChild(newButt);
+      addProject.appendChild(projDiv);
       inputField.value = '';
       inputDiv.remove();
       getButtName();
       // projectList(newButt.textContent);
       ProjectsList.addProject(Project(newButt.textContent));
       // const newProject = Project(newButt.textContent);
-      // ProjectsList().addProject(newProject);
-      // console.log(newProject);
 
-      ProjectsList.list();
+      // console.log(ProjectsList.getProject(currentInput));
+
+      // console.log(ProjectsList.list());
       cancelButt.removeEventListener('click', cancelListener);
       addButt.removeEventListener('click', addListener);
     } else {
@@ -118,6 +126,13 @@ function createAddProject() {
     cancelButt.addEventListener('click', cancelListener);
     addButt.addEventListener('click', addListener);
   });
+}
+function removeNewProject(e) {
+  const projDiv = e.target.parentElement;
+  const projButt = e.target.parentElement.firstChild;
+  // console.log(ProjectsList.getProject(projButt.textContent));
+  ProjectsList.removeProject(projButt.textContent);
+  projDiv.remove();
 }
 export {
   createAddProject, Project, getButtName, ProjectsList,
