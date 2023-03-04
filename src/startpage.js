@@ -1,4 +1,3 @@
-import { toDate } from 'date-fns';
 import Todos from './todos';
 import {
   createAddProject, Project, getButtName, ProjectsList,
@@ -82,6 +81,7 @@ function createMain() {
 
   return main;
 }
+
 function createFooter() {
   const footer = document.createElement('div');
   //   const createdBy = document.createElement('p');

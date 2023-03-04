@@ -1,3 +1,7 @@
+import {
+  toDate, parseISO, isValid, format,
+} from 'date-fns';
+import { enGB } from 'date-fns/locale';
 import Todos from './todos';
 // SINGLE PROJECT OBJECT, TODO CONTAINS TODO OBJECTS
 const Project = (name) => {
@@ -35,17 +39,6 @@ const ProjectsList = (() => {
     getProject, addProject, removeProject, list,
   };
 })();
-
-function addTodoButton(e) {
-  const mainContent = document.querySelector('.main-content');
-  const button = document.createElement('button');
-  // clear existing buttons
-  mainContent.innerHTML = '';
-  const projectName = e.innerHTML;
-  button.textContent = 'Add todos';
-  button.dataset.name = projectName;
-  mainContent.appendChild(button);
-}
 
 function getButtName() {
   const title = document.querySelector('.main-title');
@@ -144,9 +137,111 @@ function createAddProject() {
 function removeNewProject(e) {
   const projDiv = e.target.parentElement;
   const projButt = e.target.parentElement.firstChild;
+  const mainContent = document.querySelector('.main-content');
+  const mainTitle = document.querySelector('.main-title');
+  mainTitle.textContent = '';
+  mainContent.innerHTML = '';
   // console.log(ProjectsList.getProject(projButt.textContent));
+  // console.log(projDiv);
   ProjectsList.removeProject(projButt.textContent);
   projDiv.remove();
+}
+
+function addTodoButton(e) {
+  const mainContent = document.querySelector('.main-content');
+  const button = document.createElement('button');
+  // clear existing buttons
+  mainContent.innerHTML = '';
+  const projectName = e.innerHTML;
+  button.classList = 'add-Todo';
+  button.textContent = 'Add todos';
+  button.dataset.name = projectName;
+  mainContent.appendChild(button);
+  button.addEventListener('click', () => {
+    const formDiv = createForm();
+
+    console.log(formDiv);
+    mainContent.appendChild(formDiv);
+    button.style.display = 'none';
+
+    const formSubmit = document.querySelector('.form-submit');
+    formSubmit.addEventListener('click', formHandler);
+  });
+}
+// HERE NEED TO TAKE INPUTS AND CREATE TODO AND REMOVE FORM
+function dateValidation() {
+  try {
+    const dateElem = document.querySelector('.form-duedate');
+    const date = format(parseISO(dateElem.value), 'dd/MM/yyyy');
+    return date;
+  } catch (RangeError) {
+    // alert('date must be valid');
+    return false;
+  }
+}
+function formHandler(event) {
+  // console.log('test');
+  // const dateElem = document.querySelector('.form-duedate');
+  const titleElem = document.querySelector('.form-title');
+  const descriptionElem = document.querySelector('textarea');
+  const priorityElem = document.querySelector('.form-priority');
+  const stateElem = document.querySelector('.form-state');
+
+  // FORM VALUES
+  // const date = format(parseISO(dateElem.value), 'dd/MM/yyyy');
+  const date = dateValidation();
+  const title = titleElem.value;
+  const description = descriptionElem.value;
+  const priority = priorityElem.value;
+  const state = stateElem.value;
+  // console.log(priority);
+  // console.log(`data: ${date}`);
+  console.log(date);
+  if (title === '') {
+    alert('title can\'t be empty');
+  } else if (dateValidation() === false) {
+    alert('date must be valid');
+  } else if (!(priority === 'low' || priority === 'medium' || priority === 'high')) {
+    alert('You must select valid priority');
+  } else if (!(state === 'active' || state === 'inactive')) {
+    alert('You must select valid state');
+  } else {
+
+    // CREATE TODOS AND ASSIGN TO PROJECT
+  }
+  event.preventDefault();
+}
+function createForm() {
+  const formDiv = document.createElement('div');
+  const formContent = `<form method="post">
+  <div class="form-inputs">
+      <label for="form-title">Title:</label>
+      <input class="form-title" type="text" placeholder="Title" required>
+      <label for="form-duedate">Due Date:</label>
+      <input class="form-duedate"type="date" required>
+  </div>
+  <div class="form-textarea">
+      <label for="textarea">Description:</label>
+      <textarea class="textarea" name="textarea" rows="4" cols="50" placeholder="Description"></textarea>
+  </div>
+  <div class="form-selects">
+      <label for="priority">Choose Priority:</label>
+      <select class="form-priority" name="priority">
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+      </select>
+
+      <label for="state">Choose Priority:</label>
+      <select class="form-state" name="state">
+          <option value="active">Acive</option>
+          <option value="inactive">Inactive</option>
+      </select>
+  </div>
+  <input class="form-submit" type="submit" value="Submit">
+</form>`;
+  formDiv.innerHTML = formContent;
+  return formDiv;
 }
 export {
   createAddProject, getButtName,
