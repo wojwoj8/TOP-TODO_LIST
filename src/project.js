@@ -1,3 +1,4 @@
+import Todos from './todos';
 // SINGLE PROJECT OBJECT, TODO CONTAINS TODO OBJECTS
 const Project = (name) => {
   // console.log('Creating project with name:', name);
@@ -35,6 +36,17 @@ const ProjectsList = (() => {
   };
 })();
 
+function addTodoButton(e) {
+  const mainContent = document.querySelector('.main-content');
+  const button = document.createElement('button');
+  // clear existing buttons
+  mainContent.innerHTML = '';
+  const projectName = e.innerHTML;
+  button.textContent = 'Add todos';
+  button.dataset.name = projectName;
+  mainContent.appendChild(button);
+}
+
 function getButtName() {
   const title = document.querySelector('.main-title');
   const buttons = document.querySelectorAll('[data-projectbutt]');
@@ -44,6 +56,8 @@ function getButtName() {
       e.setAttribute('data-clicked', 'true');
       e.addEventListener('click', () => {
         ProjectsList.list();
+        // main title
+        addTodoButton(e);
         title.textContent = e.innerHTML;
         // console.log(e.innerHTML);
       });
@@ -135,5 +149,5 @@ function removeNewProject(e) {
   projDiv.remove();
 }
 export {
-  createAddProject, Project, getButtName, ProjectsList,
+  createAddProject, getButtName,
 };

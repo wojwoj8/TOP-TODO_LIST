@@ -1,5 +1,5 @@
 import { toDate } from 'date-fns';
-import Todos from './scripts';
+import Todos from './todos';
 import {
   createAddProject, Project, getButtName, ProjectsList,
 } from './project';
@@ -69,12 +69,16 @@ function createSidebar() {
 function createMain() {
   const main = document.createElement('div');
   const mainProjectTitle = document.createElement('h2');
+  const mainContent = document.createElement('div');
+
+  mainContent.classList = 'main-content';
 
   mainProjectTitle.classList = 'main-title';
   mainProjectTitle.textContent = '';
   main.classList = 'main';
 
   main.appendChild(mainProjectTitle);
+  main.appendChild(mainContent);
 
   return main;
 }
