@@ -10,13 +10,20 @@ const Project = (name) => {
   // const putName = (name) => Projects.push(name);
   // const setName = () => name;
   const getName = () => name;
-  const getTodoList = () => console.log(todo);
+  const getTodoList = () => todo;
+  const addTodo = (title, description, dueDate, priority, state) => {
+    todo.push(Todos(title, description, dueDate, priority, state));
+    console.log(todo);
+    // console.log(x);
+  };
   // console.log(getName());
   // return { getName, putName, getTodo };
   return {
     getTodoList,
     getName,
+    addTodo,
     name,
+    todo,
   };
 };
 // ARRAY THAT CONTAINS PROJECTS
@@ -50,6 +57,22 @@ function getButtName() {
       e.addEventListener('click', () => {
         ProjectsList.list();
         // main title
+        // console.log();
+        // REMOVE BUTTON AND FORM FROM TODAY AND THIS WEEK
+        if (e.id === 'thisWeek' || e.id === 'today') {
+          const button = document.querySelector('.add-Todo');
+          try {
+            const form = document.querySelector('form');
+            button.remove();
+            form.remove();
+            title.textContent = e.innerHTML;
+          } catch (TypeError) {
+            title.textContent = e.innerHTML;
+            return;
+          }
+
+          return;
+        }
         addTodoButton(e);
         title.textContent = e.innerHTML;
         // console.log(e.innerHTML);
@@ -157,10 +180,11 @@ function addTodoButton(e) {
   button.textContent = 'Add todos';
   button.dataset.name = projectName;
   mainContent.appendChild(button);
+  // console.log(`created button: ${button}`);
   button.addEventListener('click', () => {
     const formDiv = createForm();
 
-    console.log(formDiv);
+    // console.log(formDiv);
     mainContent.appendChild(formDiv);
     button.style.display = 'none';
 
@@ -187,6 +211,10 @@ function formHandler(event) {
   const priorityElem = document.querySelector('.form-priority');
   const stateElem = document.querySelector('.form-state');
 
+  // PROJECT NAME
+  const project = document.querySelector('[data-name]').dataset.name;
+  // console.log(project);
+
   // FORM VALUES
   // const date = format(parseISO(dateElem.value), 'dd/MM/yyyy');
   const date = dateValidation();
@@ -194,9 +222,9 @@ function formHandler(event) {
   const description = descriptionElem.value;
   const priority = priorityElem.value;
   const state = stateElem.value;
-  // console.log(priority);
+  // console.log(description);
   // console.log(`data: ${date}`);
-  console.log(date);
+  // console.log(date);
   if (title === '') {
     alert('title can\'t be empty');
   } else if (dateValidation() === false) {
@@ -206,10 +234,24 @@ function formHandler(event) {
   } else if (!(state === 'active' || state === 'inactive')) {
     alert('You must select valid state');
   } else {
-
     // CREATE TODOS AND ASSIGN TO PROJECT
+    ProjectsList.getProject(project).addTodo(title, description, date, priority, state);
+    createDivTodo(project);
+    // console.log(ProjectsList.getProject(project).getTodoList()[0].getTitle());
   }
   event.preventDefault();
+}
+function createDivTodo(project) {
+  const mainContent = document.querySelector('.main-content');
+  const todoDiv = document.createElement('div');
+  const form = document.querySelector('form');
+  const todoButton = document.querySelector('.add-Todo');
+  todoDiv.classList = 'todos';
+  todoDiv.innerHTML = ProjectsList.getProject(project).getTodoList()[0].getTitle();
+  mainContent.appendChild(todoDiv);
+  form.remove();
+  todoButton.style.display = 'inline';
+  return mainContent;
 }
 function createForm() {
   const formDiv = document.createElement('div');
@@ -232,7 +274,7 @@ function createForm() {
           <option value="high">High</option>
       </select>
 
-      <label for="state">Choose Priority:</label>
+      <label for="state">Choose State:</label>
       <select class="form-state" name="state">
           <option value="active">Acive</option>
           <option value="inactive">Inactive</option>
