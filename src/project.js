@@ -11,6 +11,7 @@ const Project = (name) => {
   // const setName = () => name;
   const getName = () => name;
   const getTodoList = () => todo;
+
   const addTodo = (title, description, dueDate, priority, state) => {
     todo.push(Todos(title, description, dueDate, priority, state));
     console.log(todo);
@@ -50,17 +51,21 @@ const ProjectsList = (() => {
 function getButtName() {
   const title = document.querySelector('.main-title');
   const buttons = document.querySelectorAll('[data-projectbutt]');
+  const mainContent = document.querySelector('.main-content');
 
   buttons.forEach((e) => {
     if (!e.hasAttribute('data-clicked')) {
       e.setAttribute('data-clicked', 'true');
       e.addEventListener('click', () => {
         ProjectsList.list();
+
         // main title
         // console.log();
         // REMOVE BUTTON AND FORM FROM TODAY AND THIS WEEK
         if (e.id === 'thisWeek' || e.id === 'today') {
           const button = document.querySelector('.add-Todo');
+          // TEMPORARY SOLUTION FOR DELETING TODOS IN TODAY AND THIS WEEK
+          mainContent.innerHTML = '';
           try {
             const form = document.querySelector('form');
             button.remove();
@@ -75,6 +80,13 @@ function getButtName() {
         }
         addTodoButton(e);
         title.textContent = e.innerHTML;
+        // console.log(e.innerHTML);
+
+        try {
+          loopTodos(e.innerHTML);
+        } catch (TypeError) {
+          console.log('error');
+        }
         // console.log(e.innerHTML);
       });
     }
@@ -173,6 +185,9 @@ function removeNewProject(e) {
 function addTodoButton(e) {
   const mainContent = document.querySelector('.main-content');
   const button = document.createElement('button');
+  // all todos are here
+  const todosDiv = document.createElement('div');
+  todosDiv.classList = 'all-Todos-List';
   // clear existing buttons
   mainContent.innerHTML = '';
   const projectName = e.innerHTML;
@@ -180,6 +195,7 @@ function addTodoButton(e) {
   button.textContent = 'Add todos';
   button.dataset.name = projectName;
   mainContent.appendChild(button);
+  mainContent.appendChild(todosDiv);
   // console.log(`created button: ${button}`);
   button.addEventListener('click', () => {
     const formDiv = createForm();
@@ -236,23 +252,32 @@ function formHandler(event) {
   } else {
     // CREATE TODOS AND ASSIGN TO PROJECT
     ProjectsList.getProject(project).addTodo(title, description, date, priority, state);
-    createDivTodo(project);
+    loopTodos(project);
     // console.log(ProjectsList.getProject(project).getTodoList()[0].getTitle());
   }
   event.preventDefault();
 }
-function createDivTodo(project) {
-  const mainContent = document.querySelector('.main-content');
-  const todoDiv = document.createElement('div');
+function loopTodos(project) {
+  const allTodosList = document.querySelector('.all-Todos-List');
   const form = document.querySelector('form');
   const todoButton = document.querySelector('.add-Todo');
-  todoDiv.classList = 'todos';
-  todoDiv.innerHTML = ProjectsList.getProject(project).getTodoList()[0].getTitle();
-  mainContent.appendChild(todoDiv);
+  allTodosList.innerHTML = '';
+  for (let i = 0; i < ProjectsList.getProject(project).getTodoList().length; i++) {
+    // Todo objects
+    const todoDiv = document.createElement('div');
+    todoDiv.classList = 'todos';
+    todoDiv.innerHTML = ProjectsList.getProject(project).getTodoList()[i].getTitle();
+    todoDiv.innerHTML += ProjectsList.getProject(project).getTodoList()[i].getDescription();
+    todoDiv.innerHTML += ProjectsList.getProject(project).getTodoList()[i].getDueDate();
+    todoDiv.innerHTML += ProjectsList.getProject(project).getTodoList()[i].getPriority();
+    todoDiv.innerHTML += ProjectsList.getProject(project).getTodoList()[i].getState();
+    allTodosList.appendChild(todoDiv);
+  }
   form.remove();
   todoButton.style.display = 'inline';
-  return mainContent;
+  return allTodosList;
 }
+
 function createForm() {
   const formDiv = document.createElement('div');
   const formContent = `<form method="post">

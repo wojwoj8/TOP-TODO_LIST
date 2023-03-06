@@ -1,6 +1,6 @@
 const Todos = (title, description, dueDate, priority, state) => {
   const getTitle = () => title;
-  const getDesctiprion = () => description;
+  const getDescription = () => description;
   const getDueDate = () => dueDate;
   const getPriority = () => priority;
   const getState = () => state;
@@ -11,7 +11,7 @@ const Todos = (title, description, dueDate, priority, state) => {
     priority,
     state,
     getTitle,
-    getDesctiprion,
+    getDescription,
     getDueDate,
     getPriority,
     getState,
