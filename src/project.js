@@ -1,7 +1,7 @@
 import {
   toDate, parseISO, isValid, format,
 } from 'date-fns';
-import { enGB } from 'date-fns/locale';
+import { de, enGB } from 'date-fns/locale';
 import Todos from './todos';
 // SINGLE PROJECT OBJECT, TODO CONTAINS TODO OBJECTS
 const Project = (name) => {
@@ -18,6 +18,7 @@ const Project = (name) => {
     console.log(todo);
     // console.log(x);
   };
+
   // console.log(getName());
   // return { getName, putName, getTodo };
   return {
@@ -48,6 +49,11 @@ const ProjectsList = (() => {
     // console.log('todo:', todo);
     return todo;
   };
+  const addTodoObj = (projectName, object) => {
+    const project = ProjectsList.getProject(projectName);
+    const todoList = project.getTodoList();
+    todoList.push(object);
+  };
   const removeTodo = (projectName, title) => {
     const deltodo = getTodo(projectName, title);
     const project = ProjectsList.getProject(projectName);
@@ -62,7 +68,7 @@ const ProjectsList = (() => {
   addProject(Project('This Week'));
 
   return {
-    getProject, addProject, removeProject, list, getTodo, removeTodo,
+    getProject, addProject, removeProject, list, getTodo, removeTodo, addTodoObj,
   };
 })();
 
@@ -230,7 +236,7 @@ function addTodoButton(e) {
 function dateValidation() {
   try {
     const dateElem = document.querySelector('.form-duedate');
-    const date = format(parseISO(dateElem.value), 'dd/MM/yyyy');
+    const date = format(parseISO(dateElem.value), 'yyyy-MM-dd');
     return date;
   } catch (RangeError) {
     // alert('date must be valid');
@@ -256,6 +262,7 @@ function formHandler(event) {
   const description = descriptionElem.value;
   const priority = priorityElem.value;
   const state = stateElem.value;
+  let a = false;
   // console.log(description);
   // console.log(`data: ${date}`);
   // console.log(date);
@@ -265,9 +272,9 @@ function formHandler(event) {
     alert('Title name cannot repeat');
   } else if (dateValidation() === false) {
     alert('date must be valid');
-  } else if (!(priority === 'low' || priority === 'medium' || priority === 'high')) {
+  } else if (!(priority === 'Low' || priority === 'Medium' || priority === 'High')) {
     alert('You must select valid priority');
-  } else if (!(state === 'active' || state === 'inactive')) {
+  } else if (!(state === 'Active' || state === 'Inactive')) {
     alert('You must select valid state');
   } else {
     // CREATE TODOS AND ASSIGN TO PROJECT
@@ -276,8 +283,14 @@ function formHandler(event) {
     const form = document.querySelector('.form-div');
     form.remove();
     // console.log(ProjectsList.getProject(project).getTodoList()[0].getTitle());
+    a = true;
   }
-  event.preventDefault();
+  try {
+    event.preventDefault();
+  } catch (TypeError) {
+
+  }
+  return a;
 }
 function loopTodos(project) {
   const allTodosList = document.querySelector('.all-Todos-List');
@@ -291,7 +304,7 @@ function loopTodos(project) {
     const remTodoDiv = document.createElement('div');
     remTodoDiv.classList = 'remTodoDiv';
 
-    const remTodo = document.createElement('button');
+    const remTodo = document.createElement('div');
     remTodo.classList = 'remove-Todo';
     todoDiv.classList = 'todos-container';
     remTodo.textContent = 'X';
@@ -320,20 +333,58 @@ function loopTodos(project) {
     </div>
 </div>`;
 
-    // const x = proj[i].getTitle();
-    // console.log(x);
-    // console.log(`project: ${project} x: ${x}`);
-    // console.log(proj);
-    // console.log(ProjectsList.getTodo(project, x));
-    // ProjectsList.removeTodo(project, x);
-
-    // todoDiv.appendChild
     const title = proj[i].getTitle();
+    const edit = document.createElement('button');
+    const del = document.createElement('button');
+    const addTodo = document.querySelector('.add-Todo');
+    edit.classList = 'editTodo';
+    edit.textContent = 'edit';
+    del.classList = 'deleteTodo';
+    del.textContent = 'delete';
     // console.log(remTodo);
     remTodo.addEventListener('click', () => {
-      ProjectsList.removeTodo(project, title);
-      console.log('removed');
-      loopTodos(project);
+      remTodoDiv.appendChild(edit);
+      remTodoDiv.appendChild(del);
+      addTodo.style.display = 'none';
+      try {
+        form.remove();
+      } catch (TypeError) {
+
+      }
+      del.addEventListener('click', () => {
+        ProjectsList.removeTodo(project, title);
+        loopTodos(project);
+      });
+      edit.addEventListener('click', (e) => {
+        // edit form func
+        // console.log(e.target.parentElement.parentElement);
+        const { index } = e.target.parentElement.parentElement.dataset;
+        e.target.parentElement.parentElement.style.display = 'none';
+        const mainContent = document.querySelector('.main-content');
+        const formDiv = editForm(project, title);
+        console.log(mainContent);
+        console.log(formDiv);
+        mainContent.appendChild(formDiv);
+        const submit = document.querySelector('.form-submit');
+        submit.addEventListener('click', (e) => {
+          console.log(ProjectsList.getProject(project).getTodoList());
+          const object = ProjectsList.getTodo(project, title);
+          console.log(object);
+          ProjectsList.removeTodo(project, title);
+          // console.log(`${project} ${title}`);
+          if (formHandler(e) === true) {
+            console.log('git');
+            // ProjectsList.removeTodo(project, title);
+          } else {
+            ProjectsList.addTodoObj(project, object);
+          }
+        });
+      });
+      remTodo.addEventListener('click', () => {
+        loopTodos(project);
+      });
+      // console.log('removed');
+      // loopTodos(project);
     });
     remTodoDiv.appendChild(remTodo);
     todoDiv.lastChild.appendChild(remTodoDiv);
@@ -348,7 +399,45 @@ function loopTodos(project) {
   todoButton.style.display = 'inline';
   return allTodosList;
 }
+function editForm(project, title) {
+  const mainContent = document.querySelector('main-content');
+  const addButton = document.querySelector('.add-Todo');
+  const proj = project;
+  const object = ProjectsList.getTodo(project, title);
 
+  addButton.style.display = 'none';
+  const formDiv = document.createElement('div');
+  formDiv.classList = 'form-div';
+  const formContent = `<form method="post">
+  <div class="form-inputs">
+      <label for="form-title">Title:</label>
+      <input class="form-title" type="text" value="${object.title}" required>
+      <label for="form-duedate">Due Date:</label>
+      <input class="form-duedate"type="date" value="${object.dueDate}" required>
+  </div>
+  <div class="form-textarea">
+      <label for="textarea">Description:</label>
+      <textarea class="textarea" name="textarea" rows="4" cols="50" placeholder="Description">${object.description}</textarea>
+  </div>
+  <div class="form-selects">
+      <label for="priority">Choose Priority:</label>
+      <select class="form-priority" name="priority" value="${object.priority}"> 
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+      </select>
+
+      <label for="state">Choose State:</label>
+      <select class="form-state" name="state" value="${object.state}">
+          <option value="Active">Acive</option>
+          <option value="Inactive">Inactive</option>
+      </select>
+  </div>
+  <input class="form-submit" type="submit" value="Submit">
+</form>`;
+  formDiv.innerHTML = formContent;
+  return formDiv;
+}
 function createForm() {
   const formDiv = document.createElement('div');
   formDiv.classList = 'form-div';
@@ -366,15 +455,15 @@ function createForm() {
   <div class="form-selects">
       <label for="priority">Choose Priority:</label>
       <select class="form-priority" name="priority">
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
       </select>
 
       <label for="state">Choose State:</label>
       <select class="form-state" name="state">
-          <option value="active">Acive</option>
-          <option value="inactive">Inactive</option>
+          <option value="Active">Acive</option>
+          <option value="Inactive">Inactive</option>
       </select>
   </div>
   <input class="form-submit" type="submit" value="Submit">
