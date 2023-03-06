@@ -11,6 +11,7 @@ const Project = (name) => {
   // const setName = () => name;
   const getName = () => name;
   const getTodoList = () => todo;
+  // const removeTodo = (index) =>
 
   const addTodo = (title, description, dueDate, priority, state) => {
     todo.push(Todos(title, description, dueDate, priority, state));
@@ -23,6 +24,7 @@ const Project = (name) => {
     getTodoList,
     getName,
     addTodo,
+
     name,
     todo,
   };
@@ -37,6 +39,22 @@ const ProjectsList = (() => {
     const delojb = getProject(projectName);
     projects.splice(projects.indexOf(delojb), 1);
   };
+  const getTodo = (projectName, title) => {
+    const project = ProjectsList.getProject(projectName);
+    // console.log('project:', project);
+    const todoList = project.getTodoList();
+    // console.log('todoList:', todoList);
+    const todo = todoList.find((todo) => todo.getTitle() === title);
+    // console.log('todo:', todo);
+    return todo;
+  };
+  const removeTodo = (projectName, title) => {
+    const deltodo = getTodo(projectName, title);
+    const project = ProjectsList.getProject(projectName);
+    // console.log('project:', project);
+    const todoList = project.getTodoList();
+    todoList.splice(todoList.indexOf(deltodo), 1);
+  };
   const list = () => console.log(projects);
 
   addProject(Project('Inbox'));
@@ -44,7 +62,7 @@ const ProjectsList = (() => {
   addProject(Project('This Week'));
 
   return {
-    getProject, addProject, removeProject, list,
+    getProject, addProject, removeProject, list, getTodo, removeTodo,
   };
 })();
 
@@ -243,6 +261,8 @@ function formHandler(event) {
   // console.log(date);
   if (title === '') {
     alert('title can\'t be empty');
+  } else if (ProjectsList.getTodo(project, title)) {
+    alert('Title name cannot repeat');
   } else if (dateValidation() === false) {
     alert('date must be valid');
   } else if (!(priority === 'low' || priority === 'medium' || priority === 'high')) {
@@ -253,6 +273,8 @@ function formHandler(event) {
     // CREATE TODOS AND ASSIGN TO PROJECT
     ProjectsList.getProject(project).addTodo(title, description, date, priority, state);
     loopTodos(project);
+    const form = document.querySelector('.form-div');
+    form.remove();
     // console.log(ProjectsList.getProject(project).getTodoList()[0].getTitle());
   }
   event.preventDefault();
@@ -262,24 +284,74 @@ function loopTodos(project) {
   const form = document.querySelector('form');
   const todoButton = document.querySelector('.add-Todo');
   allTodosList.innerHTML = '';
-  for (let i = 0; i < ProjectsList.getProject(project).getTodoList().length; i++) {
+  const proj = ProjectsList.getProject(project).getTodoList();
+  for (let i = 0; i < proj.length; i++) {
     // Todo objects
     const todoDiv = document.createElement('div');
-    todoDiv.classList = 'todos';
-    todoDiv.innerHTML = ProjectsList.getProject(project).getTodoList()[i].getTitle();
-    todoDiv.innerHTML += ProjectsList.getProject(project).getTodoList()[i].getDescription();
-    todoDiv.innerHTML += ProjectsList.getProject(project).getTodoList()[i].getDueDate();
-    todoDiv.innerHTML += ProjectsList.getProject(project).getTodoList()[i].getPriority();
-    todoDiv.innerHTML += ProjectsList.getProject(project).getTodoList()[i].getState();
+    const remTodoDiv = document.createElement('div');
+    remTodoDiv.classList = 'remTodoDiv';
+
+    const remTodo = document.createElement('button');
+    remTodo.classList = 'remove-Todo';
+    todoDiv.classList = 'todos-container';
+    remTodo.textContent = 'X';
+
+    // object index in todoArray
+    todoDiv.dataset.index = i;
+
+    todoDiv.innerHTML = `<div class="todos" data-index="${i}">
+    <div class="todoTitleDescContainer">
+        <div class="todoTitle">
+            <h2>${proj[i].getTitle()}</h2>
+        </div>
+        <div class="todoDescription">
+            <p>${proj[i].getDescription()}</p>
+        </div>
+    </div>
+    <div class="todoDatePrioContainer">
+      <div class="todoDate">
+          <p>${proj[i].getDueDate()}</p>
+      </div>
+      <div class="todoPriority">
+          <p>${proj[i].getPriority()} priority</p>
+      </div>
+      <div class="removeButtonDiv">
+      </div>
+    </div>
+</div>`;
+
+    // const x = proj[i].getTitle();
+    // console.log(x);
+    // console.log(`project: ${project} x: ${x}`);
+    // console.log(proj);
+    // console.log(ProjectsList.getTodo(project, x));
+    // ProjectsList.removeTodo(project, x);
+
+    // todoDiv.appendChild
+    const title = proj[i].getTitle();
+    // console.log(remTodo);
+    remTodo.addEventListener('click', () => {
+      ProjectsList.removeTodo(project, title);
+      console.log('removed');
+      loopTodos(project);
+    });
+    remTodoDiv.appendChild(remTodo);
+    todoDiv.lastChild.appendChild(remTodoDiv);
     allTodosList.appendChild(todoDiv);
   }
-  form.remove();
+  try {
+    form.remove();
+  } catch (TypeError) {
+
+  }
+
   todoButton.style.display = 'inline';
   return allTodosList;
 }
 
 function createForm() {
   const formDiv = document.createElement('div');
+  formDiv.classList = 'form-div';
   const formContent = `<form method="post">
   <div class="form-inputs">
       <label for="form-title">Title:</label>
