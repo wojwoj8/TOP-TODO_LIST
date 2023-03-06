@@ -91,3 +91,6 @@ body{
     padding: 5px 0;
     
 }
+.inactive{
+    text-decoration: line-through;
+}

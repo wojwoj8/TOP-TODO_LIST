@@ -308,12 +308,17 @@ function loopTodos(project) {
     remTodo.classList = 'remove-Todo';
     todoDiv.classList = 'todos-container';
     remTodo.textContent = 'X';
+    let todosClass = 'todoTitleDescContainer';
+
+    if (proj[i].getState() === 'Inactive') {
+      todosClass = 'todoTitleDescContainer inactive';
+    }
 
     // object index in todoArray
     todoDiv.dataset.index = i;
 
     todoDiv.innerHTML = `<div class="todos" data-index="${i}">
-    <div class="todoTitleDescContainer">
+    <div class="${todosClass}">
         <div class="todoTitle">
             <h2>${proj[i].getTitle()}</h2>
         </div>
