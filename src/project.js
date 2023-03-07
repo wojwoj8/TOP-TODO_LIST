@@ -61,14 +61,55 @@ const ProjectsList = (() => {
     const todoList = project.getTodoList();
     todoList.splice(todoList.indexOf(deltodo), 1);
   };
-  const list = () => console.log(projects);
+  const list = () => projects;
 
-  addProject(Project('Inbox'));
-  addProject(Project('Today'));
-  addProject(Project('This Week'));
+  const initProjects = () => {
+    const projectList = JSON.parse(localStorage.getItem('projects'));
+    if (projectList === null) {
+      addProject(Project('Inbox'));
+      addProject(Project('Today'));
+      addProject(Project('This Week'));
+      console.log('First web visit');
+      setStorage();
+    } else {
+      for (let i = 0; i < projectList.length; i++) {
+        const projectObj = projectList[i];
+        const project = Project(projectObj.name);
+        const todoList = project.getTodoList();
+        for (let j = 0; j < projectObj.todo.length; j++) {
+          const todoData = projectObj.todo[j];
+          todoList.push(Todos(
+            todoData.title,
+            todoData.description,
+            todoData.dueDate,
+            todoData.priority,
+            todoData.state,
+          ));
+        }
+        addProject(project);
+      }
+    }
+  };
 
+  const setStorage = () => {
+    const projectListData = projects.map((project) => ({
+      name: project.getName(),
+      todo: project.getTodoList().map((todo) => ({
+        title: todo.getTitle(),
+        description: todo.getDescription(),
+        dueDate: todo.getDueDate(),
+        priority: todo.getPriority(),
+        state: todo.getState(),
+      })),
+    }));
+    localStorage.setItem('projects', JSON.stringify(projectListData));
+  };
+
+  initProjects();
+
+  // console.log(projectList);
   return {
-    getProject, addProject, removeProject, list, getTodo, removeTodo, addTodoObj,
+    getProject, addProject, removeProject, list, getTodo, removeTodo, addTodoObj, setStorage,
   };
 })();
 
@@ -476,6 +517,18 @@ function createForm() {
   formDiv.innerHTML = formContent;
   return formDiv;
 }
+// function loadStorage() {
+//   if (localStorage.getItem('projects')) {
+//     const projectList = localStorage.getItem('projects');
+//     console.log(JSON.parse(projectList));
+//     console.log(ProjectsList.list());
+//     // for (let i = 0; i < projectList.length; i++) {
+//     //   console.log('test');
+//     // console.log(loopTodos(projectList[i]));
+//     // }
+//   }
+// }
+console.log(ProjectsList.list());
 export {
   createAddProject, getButtName,
 };

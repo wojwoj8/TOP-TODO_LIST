@@ -1,6 +1,6 @@
 import Todos from './todos';
 import {
-  createAddProject, Project, getButtName, ProjectsList,
+  createAddProject, Project, getButtName, ProjectsList, loadStorage,
 } from './project';
 
 function createHeader() {
@@ -103,6 +103,7 @@ function webInit() {
   content.appendChild(createFooter());
   getButtName();
   createAddProject();
+  // loadStorage();
 
   return content;
 }
