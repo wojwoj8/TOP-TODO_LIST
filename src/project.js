@@ -111,7 +111,7 @@ const ProjectsList = (() => {
   const removeProjectFromStorage = (projectName) => {
     const projectListData = JSON.parse(localStorage.getItem('projects'));
     const projectIndex = projectListData.findIndex((project) => project.name === projectName);
-    projectListData.splice(projectListData.indexOf(projectIndex), 1);
+    projectListData.splice(projectIndex, 1);
     ProjectsList.removeProject(projectName);
     console.log(projectListData);
     setStorage();
