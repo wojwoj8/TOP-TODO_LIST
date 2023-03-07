@@ -116,7 +116,20 @@ const ProjectsList = (() => {
     console.log(projectListData);
     setStorage();
   };
+  const addTodoToStorage = (projectName, title, description, date, priority, state) => {
+    ProjectsList.getProject(projectName).addTodo(title, description, date, priority, state);
+    ProjectsList.setStorage();
+  };
+  // for edit
+  const addTodoToStorageEdit = (projectName, object) => {
+    addTodoObj(projectName, object);
+    setStorage();
+  };
 
+  const removeTodoFromStorage = (project, title) => {
+    ProjectsList.removeTodo(project, title);
+    setStorage();
+  };
   initProjects();
 
   // console.log(projectList);
@@ -131,6 +144,9 @@ const ProjectsList = (() => {
     setStorage,
     addProjectToStorage,
     removeProjectFromStorage,
+    addTodoToStorage,
+    addTodoToStorageEdit,
+    removeTodoFromStorage,
   };
 })();
 
@@ -341,7 +357,7 @@ function formHandler(event) {
     alert('You must select valid state');
   } else {
     // CREATE TODOS AND ASSIGN TO PROJECT
-    ProjectsList.getProject(project).addTodo(title, description, date, priority, state);
+    ProjectsList.addTodoToStorage(project, title, description, date, priority, state);
     loopTodos(project);
     const form = document.querySelector('.form-div');
     form.remove();
@@ -420,7 +436,7 @@ function loopTodos(project) {
 
       }
       del.addEventListener('click', () => {
-        ProjectsList.removeTodo(project, title);
+        ProjectsList.removeTodoFromStorage(project, title);
         loopTodos(project);
       });
       edit.addEventListener('click', (e) => {
@@ -438,13 +454,14 @@ function loopTodos(project) {
           console.log(ProjectsList.getProject(project).getTodoList());
           const object = ProjectsList.getTodo(project, title);
           console.log(object);
-          ProjectsList.removeTodo(project, title);
+          ProjectsList.removeTodoFromStorage(project, title);
           // console.log(`${project} ${title}`);
           if (formHandler(e) === true) {
             console.log('git');
             // ProjectsList.removeTodo(project, title);
           } else {
-            ProjectsList.addTodoObj(project, object);
+            // for editing
+            ProjectsList.addTodoToStorageEdit(project, object);
           }
         });
       });
