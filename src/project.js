@@ -104,12 +104,33 @@ const ProjectsList = (() => {
     }));
     localStorage.setItem('projects', JSON.stringify(projectListData));
   };
+  const addProjectToStorage = (projectName) => {
+    addProject(projectName);
+    setStorage();
+  };
+  const removeProjectFromStorage = (projectName) => {
+    const projectListData = JSON.parse(localStorage.getItem('projects'));
+    const projectIndex = projectListData.findIndex((project) => project.name === projectName);
+    projectListData.splice(projectListData.indexOf(projectIndex), 1);
+    ProjectsList.removeProject(projectName);
+    console.log(projectListData);
+    setStorage();
+  };
 
   initProjects();
 
   // console.log(projectList);
   return {
-    getProject, addProject, removeProject, list, getTodo, removeTodo, addTodoObj, setStorage,
+    getProject,
+    addProject,
+    removeProject,
+    list,
+    getTodo,
+    removeTodo,
+    addTodoObj,
+    setStorage,
+    addProjectToStorage,
+    removeProjectFromStorage,
   };
 })();
 
@@ -206,7 +227,8 @@ function createAddProject() {
       inputDiv.remove();
       getButtName();
       // projectList(newButt.textContent);
-      ProjectsList.addProject(Project(newButt.textContent));
+      ProjectsList.addProjectToStorage(Project(newButt.textContent));
+
       // const newProject = Project(newButt.textContent);
 
       // console.log(ProjectsList.getProject(currentInput));
@@ -243,7 +265,7 @@ function removeNewProject(e) {
   mainContent.innerHTML = '';
   // console.log(ProjectsList.getProject(projButt.textContent));
   // console.log(projDiv);
-  ProjectsList.removeProject(projButt.textContent);
+  ProjectsList.removeProjectFromStorage(projButt.textContent);
   projDiv.remove();
 }
 
@@ -528,7 +550,30 @@ function createForm() {
 //     // }
 //   }
 // }
+function renderProjects() {
+  const addProject = document.querySelector('.new-projects');
+  for (let i = 3; i < ProjectsList.list().length; i++) {
+    const currentInput = Project(ProjectsList.list()[i].name);
+    console.log(currentInput.name);
+    const newButt = document.createElement('button');
+    const remButt = document.createElement('button');
+    const projDiv = document.createElement('div');
+    newButt.classList = 'new-proj-butt';
+    newButt.textContent = currentInput.name;
+    newButt.dataset.projectbutt = '';
+    remButt.textContent = 'X';
+    remButt.addEventListener('click', removeNewProject);
+    projDiv.appendChild(newButt);
+    projDiv.appendChild(remButt);
+    // addProjectButt.style.display = 'grid';
+    addProject.appendChild(projDiv);
+    getButtName();
+    console.log(newButt.textContent);
+  // ProjectsList.addProject(Project(newButt.textContent));
+  }
+}
+
 console.log(ProjectsList.list());
 export {
-  createAddProject, getButtName,
+  createAddProject, getButtName, renderProjects,
 };
