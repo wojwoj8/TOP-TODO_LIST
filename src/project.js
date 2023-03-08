@@ -1,5 +1,5 @@
 import {
-  toDate, parseISO, isValid, format,
+  toDate, parseISO, isValid, format, differenceInDays,
 } from 'date-fns';
 import { de, enGB } from 'date-fns/locale';
 import Todos from './todos';
@@ -130,6 +130,37 @@ const ProjectsList = (() => {
     ProjectsList.removeTodo(project, title);
     setStorage();
   };
+
+  // All todos from all projects
+  const listAllTodos = () => {
+    const todaysDate = new Date();
+    todaysDate.setHours(0, 0, 0, 0);
+    // console.log(todaysDate);
+    const todoList = list();
+    todoList.map((project) => {
+      if (!(project.name === 'Today' || project.name === 'This Week')) {
+        console.log(project.name);
+
+        project.todo.map((todo) => {
+          const todoDate = new Date(todo.dueDate);
+          todoDate.setHours(0, 0, 0, 0);
+          // console.log(todoDate);
+          // console.log(todo);
+          const x = (differenceInDays(todoDate, todaysDate));
+
+          if (x <= 7 && x >= 0) {
+            console.log(`W przeciagu tygodnia: ${x}`);
+            console.log(todo);
+          }
+          if (x === 0) {
+            console.log(`Dzisiaj: ${x}`);
+            console.log(todo);
+          }
+        });
+      }
+    });
+  };
+
   initProjects();
 
   // console.log(projectList);
@@ -147,6 +178,7 @@ const ProjectsList = (() => {
     addTodoToStorage,
     addTodoToStorageEdit,
     removeTodoFromStorage,
+    listAllTodos,
   };
 })();
 
@@ -168,6 +200,7 @@ function getButtName() {
           const button = document.querySelector('.add-Todo');
           // TEMPORARY SOLUTION FOR DELETING TODOS IN TODAY AND THIS WEEK
           mainContent.innerHTML = '';
+          ProjectsList.listAllTodos();
           try {
             const form = document.querySelector('form');
             button.remove();
@@ -187,7 +220,7 @@ function getButtName() {
         try {
           loopTodos(e.innerHTML);
         } catch (TypeError) {
-          console.log('error');
+          // console.log('error');
         }
         // console.log(e.innerHTML);
       });
@@ -571,7 +604,7 @@ function renderProjects() {
   const addProject = document.querySelector('.new-projects');
   for (let i = 3; i < ProjectsList.list().length; i++) {
     const currentInput = Project(ProjectsList.list()[i].name);
-    console.log(currentInput.name);
+    // console.log(currentInput.name);
     const newButt = document.createElement('button');
     const remButt = document.createElement('button');
     const projDiv = document.createElement('div');
@@ -585,7 +618,7 @@ function renderProjects() {
     // addProjectButt.style.display = 'grid';
     addProject.appendChild(projDiv);
     getButtName();
-    console.log(newButt.textContent);
+    // console.log(newButt.textContent);
   // ProjectsList.addProject(Project(newButt.textContent));
   }
 }
