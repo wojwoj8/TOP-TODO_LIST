@@ -41,7 +41,7 @@ const ProjectsList = (() => {
     projects.splice(projects.indexOf(delojb), 1);
   };
   const getTodo = (projectName, title) => {
-    const project = ProjectsList.getProject(projectName);
+    const project = getProject(projectName);
     // console.log('project:', project);
     const todoList = project.getTodoList();
     // console.log('todoList:', todoList);
@@ -50,13 +50,13 @@ const ProjectsList = (() => {
     return todo;
   };
   const addTodoObj = (projectName, object) => {
-    const project = ProjectsList.getProject(projectName);
+    const project = getProject(projectName);
     const todoList = project.getTodoList();
     todoList.push(object);
   };
   const removeTodo = (projectName, title) => {
     const deltodo = getTodo(projectName, title);
-    const project = ProjectsList.getProject(projectName);
+    const project = getProject(projectName);
     // console.log('project:', project);
     const todoList = project.getTodoList();
     todoList.splice(todoList.indexOf(deltodo), 1);
@@ -135,11 +135,16 @@ const ProjectsList = (() => {
   const listAllTodos = () => {
     const todaysDate = new Date();
     todaysDate.setHours(0, 0, 0, 0);
+    // getProject('Today').todo = [];
+    // getProject('This Week').todo = [];
+    console.log(list());
+    // setStorage();
     // console.log(todaysDate);
     const todoList = list();
     todoList.map((project) => {
       if (!(project.name === 'Today' || project.name === 'This Week')) {
         console.log(project.name);
+        // const projectName = getProject(project.name);
 
         project.todo.map((todo) => {
           const todoDate = new Date(todo.dueDate);
@@ -149,20 +154,24 @@ const ProjectsList = (() => {
           const x = (differenceInDays(todoDate, todaysDate));
 
           if (x <= 7 && x >= 0) {
-            console.log(`W przeciagu tygodnia: ${x}`);
-            console.log(todo);
+            // console.log(`W przeciagu tygodnia: ${x}`);
+            // console.log(todo);
+            addTodoObj('This Week', todo);
+            // console.log(projectName.todo);
           }
           if (x === 0) {
-            console.log(`Dzisiaj: ${x}`);
-            console.log(todo);
+            // console.log(`Dzisiaj: ${x}`);
+            // console.log(todo);
+            addTodoObj('Today', todo);
           }
         });
+        console.log(projects);
       }
     });
   };
 
   initProjects();
-
+  listAllTodos();
   // console.log(projectList);
   return {
     getProject,
@@ -191,23 +200,32 @@ function getButtName() {
     if (!e.hasAttribute('data-clicked')) {
       e.setAttribute('data-clicked', 'true');
       e.addEventListener('click', () => {
-        ProjectsList.list();
+        console.log(ProjectsList.list());
 
         // main title
         // console.log();
         // REMOVE BUTTON AND FORM FROM TODAY AND THIS WEEK
         if (e.id === 'thisWeek' || e.id === 'today') {
-          const button = document.querySelector('.add-Todo');
+          // ProjectsList.listAllTodos();
+          // ProjectsList.listAllTodos();
+          // console.log(localStorage.getItem('projects'));
           // TEMPORARY SOLUTION FOR DELETING TODOS IN TODAY AND THIS WEEK
           mainContent.innerHTML = '';
-          ProjectsList.listAllTodos();
+          // ProjectsList.listAllTodos().today;
+          addTodoButton(e);
+          loopTodos(e.innerHTML);
+          console.log('test');
+          const button = document.querySelector('.add-Todo');
+          button.remove();
           try {
             const form = document.querySelector('form');
             button.remove();
             form.remove();
             title.textContent = e.innerHTML;
           } catch (TypeError) {
+            console.log(ProjectsList.list());
             title.textContent = e.innerHTML;
+            // loopTodos(e.innerHTML);
             return;
           }
 
@@ -462,8 +480,9 @@ function loopTodos(project) {
     remTodo.addEventListener('click', () => {
       remTodoDiv.appendChild(edit);
       remTodoDiv.appendChild(del);
-      addTodo.style.display = 'none';
+
       try {
+        addTodo.style.display = 'none';
         form.remove();
       } catch (TypeError) {
 
@@ -510,11 +529,11 @@ function loopTodos(project) {
   }
   try {
     form.remove();
+    todoButton.style.display = 'inline';
   } catch (TypeError) {
 
   }
 
-  todoButton.style.display = 'inline';
   return allTodosList;
 }
 function editForm(project, title) {
@@ -523,7 +542,12 @@ function editForm(project, title) {
   const proj = project;
   const object = ProjectsList.getTodo(project, title);
 
-  addButton.style.display = 'none';
+  try {
+    addButton.style.display = 'none';
+  } catch (TypeError) {
+
+  }
+
   const formDiv = document.createElement('div');
   formDiv.classList = 'form-div';
   const formContent = `<form method="post">
