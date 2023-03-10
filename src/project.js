@@ -13,8 +13,8 @@ const Project = (name) => {
   const getTodoList = () => todo;
   // const removeTodo = (index) =>
 
-  const addTodo = (title, description, dueDate, priority, state) => {
-    todo.push(Todos(title, description, dueDate, priority, state));
+  const addTodo = (title, description, dueDate, priority, state, name) => {
+    todo.push(Todos(title, description, dueDate, priority, state, name));
     console.log(todo);
     // console.log(x);
   };
@@ -71,6 +71,7 @@ const ProjectsList = (() => {
       addProject(Project('This Week'));
       console.log('First web visit');
       setStorage();
+      listAllTodos();
     } else {
       for (let i = 0; i < projectList.length; i++) {
         const projectObj = projectList[i];
@@ -84,6 +85,7 @@ const ProjectsList = (() => {
             todoData.dueDate,
             todoData.priority,
             todoData.state,
+            todoData.projId,
           ));
         }
         addProject(project);
@@ -100,6 +102,7 @@ const ProjectsList = (() => {
         dueDate: todo.getDueDate(),
         priority: todo.getPriority(),
         state: todo.getState(),
+        projId: todo.getProjId(),
       })),
     }));
     localStorage.setItem('projects', JSON.stringify(projectListData));
@@ -112,13 +115,13 @@ const ProjectsList = (() => {
     const projectListData = JSON.parse(localStorage.getItem('projects'));
     const projectIndex = projectListData.findIndex((project) => project.name === projectName);
     projectListData.splice(projectIndex, 1);
-    ProjectsList.removeProject(projectName);
+    removeProject(projectName);
     console.log(projectListData);
     setStorage();
   };
-  const addTodoToStorage = (projectName, title, description, date, priority, state) => {
-    ProjectsList.getProject(projectName).addTodo(title, description, date, priority, state);
-    ProjectsList.setStorage();
+  const addTodoToStorage = (projectName, title, description, date, priority, state, projId) => {
+    getProject(projectName).addTodo(title, description, date, priority, state, projectName);
+    setStorage();
   };
   // for edit
   const addTodoToStorageEdit = (projectName, object) => {
@@ -127,7 +130,7 @@ const ProjectsList = (() => {
   };
 
   const removeTodoFromStorage = (project, title) => {
-    ProjectsList.removeTodo(project, title);
+    removeTodo(project, title);
     setStorage();
   };
 
@@ -135,8 +138,11 @@ const ProjectsList = (() => {
   const listAllTodos = () => {
     const todaysDate = new Date();
     todaysDate.setHours(0, 0, 0, 0);
-    // getProject('Today').todo = [];
-    // getProject('This Week').todo = [];
+    const today = getProject('Today');
+    const thisWeek = getProject('This Week');
+    today.todo.length = 0;
+    thisWeek.todo.length = 0;
+    console.log(JSON.parse(localStorage.getItem('project')));
     console.log(list());
     // setStorage();
     // console.log(todaysDate);
@@ -165,13 +171,14 @@ const ProjectsList = (() => {
             addTodoObj('Today', todo);
           }
         });
-        console.log(projects);
+        // console.log(projects);
       }
     });
+    console.log(today.todo);
   };
 
   initProjects();
-  listAllTodos();
+
   // console.log(projectList);
   return {
     getProject,
@@ -200,21 +207,12 @@ function getButtName() {
     if (!e.hasAttribute('data-clicked')) {
       e.setAttribute('data-clicked', 'true');
       e.addEventListener('click', () => {
-        console.log(ProjectsList.list());
-
-        // main title
-        // console.log();
+        //  main title
         // REMOVE BUTTON AND FORM FROM TODAY AND THIS WEEK
         if (e.id === 'thisWeek' || e.id === 'today') {
-          // ProjectsList.listAllTodos();
-          // ProjectsList.listAllTodos();
-          // console.log(localStorage.getItem('projects'));
-          // TEMPORARY SOLUTION FOR DELETING TODOS IN TODAY AND THIS WEEK
-          mainContent.innerHTML = '';
-          // ProjectsList.listAllTodos().today;
+          console.log(ProjectsList.list());
           addTodoButton(e);
-          loopTodos(e.innerHTML);
-          console.log('test');
+          // ProjectsList.listAllTodos();
           const button = document.querySelector('.add-Todo');
           button.remove();
           try {
@@ -223,14 +221,18 @@ function getButtName() {
             form.remove();
             title.textContent = e.innerHTML;
           } catch (TypeError) {
-            console.log(ProjectsList.list());
+            // console.log(ProjectsList.list());
+
             title.textContent = e.innerHTML;
             // loopTodos(e.innerHTML);
-            return;
           }
-
+          // ProjectsList.listAllTodos();
+          console.log(ProjectsList.list());
+          ProjectsList.listAllTodos();
+          loopTodos(e.innerHTML);
           return;
         }
+
         addTodoButton(e);
         title.textContent = e.innerHTML;
         // console.log(e.innerHTML);
@@ -408,7 +410,7 @@ function formHandler(event) {
     alert('You must select valid state');
   } else {
     // CREATE TODOS AND ASSIGN TO PROJECT
-    ProjectsList.addTodoToStorage(project, title, description, date, priority, state);
+    ProjectsList.addTodoToStorage(project, title, description, date, priority, state, project);
     loopTodos(project);
     const form = document.querySelector('.form-div');
     form.remove();
@@ -428,8 +430,12 @@ function loopTodos(project) {
   const todoButton = document.querySelector('.add-Todo');
   allTodosList.innerHTML = '';
   const proj = ProjectsList.getProject(project).getTodoList();
+  let from = '';
   for (let i = 0; i < proj.length; i++) {
     // Todo objects
+    if (project === 'Today' || project === 'This Week') {
+      from = `(${proj[i].getProjId()})`;
+    }
     const todoDiv = document.createElement('div');
     const remTodoDiv = document.createElement('div');
     remTodoDiv.classList = 'remTodoDiv';
@@ -450,7 +456,7 @@ function loopTodos(project) {
     todoDiv.innerHTML = `<div class="todos" data-index="${i}">
     <div class="${todosClass}">
         <div class="todoTitle">
-            <h2>${proj[i].getTitle()}</h2>
+            <h2>${proj[i].getTitle()} ${from}</h2>
         </div>
         <div class="todoDescription">
             <p>${proj[i].getDescription()}</p>
@@ -647,7 +653,7 @@ function renderProjects() {
   }
 }
 
-console.log(ProjectsList.list());
+// console.log(ProjectsList.list());
 export {
   createAddProject, getButtName, renderProjects,
 };

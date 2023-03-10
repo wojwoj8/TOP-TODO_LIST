@@ -104,7 +104,6 @@ function webInit() {
   getButtName();
   createAddProject();
   renderProjects();
-  // loadStorage();
 
   return content;
 }
