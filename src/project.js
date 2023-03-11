@@ -1,26 +1,18 @@
 import {
-  toDate, parseISO, isValid, format, differenceInDays,
+  parseISO, format, differenceInDays,
 } from 'date-fns';
-import { de, enGB } from 'date-fns/locale';
 import Todos from './todos';
 // SINGLE PROJECT OBJECT, TODO CONTAINS TODO OBJECTS
 const Project = (name) => {
-  // console.log('Creating project with name:', name);
   const todo = [];
-  // const putName = (name) => Projects.push(name);
-  // const setName = () => name;
+
   const getName = () => name;
   const getTodoList = () => todo;
-  // const removeTodo = (index) =>
 
   const addTodo = (title, description, dueDate, priority, state, name) => {
     todo.push(Todos(title, description, dueDate, priority, state, name));
-    console.log(todo);
-    // console.log(x);
   };
 
-  // console.log(getName());
-  // return { getName, putName, getTodo };
   return {
     getTodoList,
     getName,
@@ -42,11 +34,11 @@ const ProjectsList = (() => {
   };
   const getTodo = (projectName, title) => {
     const project = getProject(projectName);
-    // console.log('project:', project);
+
     const todoList = project.getTodoList();
-    // console.log('todoList:', todoList);
+
     const todo = todoList.find((todo) => todo.getTitle() === title);
-    // console.log('todo:', todo);
+
     return todo;
   };
   const addTodoObj = (projectName, object) => {
@@ -57,7 +49,7 @@ const ProjectsList = (() => {
   const removeTodo = (projectName, title) => {
     const deltodo = getTodo(projectName, title);
     const project = getProject(projectName);
-    // console.log('project:', project);
+
     const todoList = project.getTodoList();
     todoList.splice(todoList.indexOf(deltodo), 1);
   };
@@ -69,7 +61,7 @@ const ProjectsList = (() => {
       addProject(Project('Inbox'));
       addProject(Project('Today'));
       addProject(Project('This Week'));
-      console.log('First web visit');
+
       setStorage();
       listAllTodos();
     } else {
@@ -116,7 +108,7 @@ const ProjectsList = (() => {
     const projectIndex = projectListData.findIndex((project) => project.name === projectName);
     projectListData.splice(projectIndex, 1);
     removeProject(projectName);
-    console.log(projectListData);
+
     setStorage();
   };
   const addTodoToStorage = (projectName, title, description, date, priority, state, projId) => {
@@ -142,44 +134,28 @@ const ProjectsList = (() => {
     const thisWeek = getProject('This Week');
     today.todo.length = 0;
     thisWeek.todo.length = 0;
-    console.log(JSON.parse(localStorage.getItem('project')));
-    console.log(list());
-    // setStorage();
-    // console.log(todaysDate);
+
     const todoList = list();
     todoList.map((project) => {
       if (!(project.name === 'Today' || project.name === 'This Week')) {
-        console.log(project.name);
-        // const projectName = getProject(project.name);
-
         project.todo.map((todo) => {
           const todoDate = new Date(todo.dueDate);
           todoDate.setHours(0, 0, 0, 0);
-          // console.log(todoDate);
-          // console.log(todo);
           const x = (differenceInDays(todoDate, todaysDate));
 
           if (x <= 7 && x >= 0) {
-            // console.log(`W przeciagu tygodnia: ${x}`);
-            // console.log(todo);
             addTodoObj('This Week', todo);
-            // console.log(projectName.todo);
           }
           if (x === 0) {
-            // console.log(`Dzisiaj: ${x}`);
-            // console.log(todo);
             addTodoObj('Today', todo);
           }
         });
-        // console.log(projects);
       }
     });
-    console.log(today.todo);
   };
 
   initProjects();
 
-  // console.log(projectList);
   return {
     getProject,
     addProject,
@@ -201,18 +177,14 @@ const ProjectsList = (() => {
 function getButtName() {
   const title = document.querySelector('.main-title');
   const buttons = document.querySelectorAll('[data-projectbutt]');
-  const mainContent = document.querySelector('.main-content');
 
   buttons.forEach((e) => {
     if (!e.hasAttribute('data-clicked')) {
       e.setAttribute('data-clicked', 'true');
       e.addEventListener('click', () => {
-        //  main title
         // REMOVE BUTTON AND FORM FROM TODAY AND THIS WEEK
         if (e.id === 'thisWeek' || e.id === 'today') {
-          console.log(ProjectsList.list());
           addTodoButton(e);
-          // ProjectsList.listAllTodos();
           const button = document.querySelector('.add-Todo');
           button.remove();
           try {
@@ -221,28 +193,23 @@ function getButtName() {
             form.remove();
             title.textContent = e.innerHTML;
           } catch (TypeError) {
-            // console.log(ProjectsList.list());
-
             title.textContent = e.innerHTML;
-            // loopTodos(e.innerHTML);
           }
-          // ProjectsList.listAllTodos();
-          console.log(ProjectsList.list());
           ProjectsList.listAllTodos();
           loopTodos(e.innerHTML);
+          const editDeleteButt = document.querySelectorAll('.remove-Todo');
+          editDeleteButt.forEach((e) => {
+            e.remove();
+          });
           return;
         }
-
         addTodoButton(e);
         title.textContent = e.innerHTML;
-        // console.log(e.innerHTML);
-
         try {
           loopTodos(e.innerHTML);
         } catch (TypeError) {
-          // console.log('error');
+
         }
-        // console.log(e.innerHTML);
       });
     }
   });
@@ -265,7 +232,6 @@ function createAddProject() {
   cancelButt.setAttribute('id', 'butt-cancel');
 
   const cancelListener = () => {
-    // console.log('test cancel');
     addProjectButt.style.display = 'grid';
     inputField.value = '';
     inputDiv.remove();
@@ -274,8 +240,6 @@ function createAddProject() {
   };
 
   const addListener = () => {
-    // console.log('test add');
-    // console.log(inputField.value);
     const currentInput = inputField.value;
     if (ProjectsList.getProject(currentInput)) {
       alert('Project name cannot repeat');
@@ -295,25 +259,17 @@ function createAddProject() {
       inputField.value = '';
       inputDiv.remove();
       getButtName();
-      // projectList(newButt.textContent);
+
       ProjectsList.addProjectToStorage(Project(newButt.textContent));
 
-      // const newProject = Project(newButt.textContent);
-
-      // console.log(ProjectsList.getProject(currentInput));
-
-      // console.log(ProjectsList.list());
       cancelButt.removeEventListener('click', cancelListener);
       addButt.removeEventListener('click', addListener);
     } else {
-      // console.log(currentInput);
-      // console.log('alert');
       alert('Project name cannot be empty');
     }
   };
 
   addProjectButt.addEventListener('click', () => {
-    // console.log('test');
     inputDiv.appendChild(inputField);
     buttDiv.appendChild(addButt);
     buttDiv.appendChild(cancelButt);
@@ -332,8 +288,7 @@ function removeNewProject(e) {
   const mainTitle = document.querySelector('.main-title');
   mainTitle.textContent = '';
   mainContent.innerHTML = '';
-  // console.log(ProjectsList.getProject(projButt.textContent));
-  // console.log(projDiv);
+
   ProjectsList.removeProjectFromStorage(projButt.textContent);
   projDiv.remove();
 }
@@ -352,11 +307,10 @@ function addTodoButton(e) {
   button.dataset.name = projectName;
   mainContent.appendChild(button);
   mainContent.appendChild(todosDiv);
-  // console.log(`created button: ${button}`);
+
   button.addEventListener('click', () => {
     const formDiv = createForm();
 
-    // console.log(formDiv);
     mainContent.appendChild(formDiv);
     button.style.display = 'none';
 
@@ -371,13 +325,10 @@ function dateValidation() {
     const date = format(parseISO(dateElem.value), 'yyyy-MM-dd');
     return date;
   } catch (RangeError) {
-    // alert('date must be valid');
     return false;
   }
 }
 function formHandler(event) {
-  // console.log('test');
-  // const dateElem = document.querySelector('.form-duedate');
   const titleElem = document.querySelector('.form-title');
   const descriptionElem = document.querySelector('textarea');
   const priorityElem = document.querySelector('.form-priority');
@@ -385,19 +336,15 @@ function formHandler(event) {
 
   // PROJECT NAME
   const project = document.querySelector('[data-name]').dataset.name;
-  // console.log(project);
 
   // FORM VALUES
-  // const date = format(parseISO(dateElem.value), 'dd/MM/yyyy');
   const date = dateValidation();
   const title = titleElem.value;
   const description = descriptionElem.value;
   const priority = priorityElem.value;
   const state = stateElem.value;
   let a = false;
-  // console.log(description);
-  // console.log(`data: ${date}`);
-  // console.log(date);
+
   if (title === '') {
     alert('title can\'t be empty');
   } else if (ProjectsList.getTodo(project, title)) {
@@ -414,7 +361,7 @@ function formHandler(event) {
     loopTodos(project);
     const form = document.querySelector('.form-div');
     form.remove();
-    // console.log(ProjectsList.getProject(project).getTodoList()[0].getTitle());
+
     a = true;
   }
   try {
@@ -482,7 +429,7 @@ function loopTodos(project) {
     edit.textContent = 'edit';
     del.classList = 'deleteTodo';
     del.textContent = 'delete';
-    // console.log(remTodo);
+
     remTodo.addEventListener('click', () => {
       remTodoDiv.appendChild(edit);
       remTodoDiv.appendChild(del);
@@ -499,26 +446,18 @@ function loopTodos(project) {
       });
       edit.addEventListener('click', (e) => {
         // edit form func
-        // console.log(e.target.parentElement.parentElement);
-        const { index } = e.target.parentElement.parentElement.dataset;
         e.target.parentElement.parentElement.style.display = 'none';
         const mainContent = document.querySelector('.main-content');
         const formDiv = editForm(project, title);
-        console.log(mainContent);
-        console.log(formDiv);
+
         mainContent.appendChild(formDiv);
         const submit = document.querySelector('.form-submit');
         submit.addEventListener('click', (e) => {
-          console.log(ProjectsList.getProject(project).getTodoList());
           const object = ProjectsList.getTodo(project, title);
-          console.log(object);
           ProjectsList.removeTodoFromStorage(project, title);
-          // console.log(`${project} ${title}`);
           if (formHandler(e) === true) {
-            console.log('git');
-            // ProjectsList.removeTodo(project, title);
+
           } else {
-            // for editing
             ProjectsList.addTodoToStorageEdit(project, object);
           }
         });
@@ -526,8 +465,6 @@ function loopTodos(project) {
       remTodo.addEventListener('click', () => {
         loopTodos(project);
       });
-      // console.log('removed');
-      // loopTodos(project);
     });
     remTodoDiv.appendChild(remTodo);
     todoDiv.lastChild.appendChild(remTodoDiv);
@@ -543,9 +480,7 @@ function loopTodos(project) {
   return allTodosList;
 }
 function editForm(project, title) {
-  const mainContent = document.querySelector('main-content');
   const addButton = document.querySelector('.add-Todo');
-  const proj = project;
   const object = ProjectsList.getTodo(project, title);
 
   try {
@@ -619,22 +554,12 @@ function createForm() {
   formDiv.innerHTML = formContent;
   return formDiv;
 }
-// function loadStorage() {
-//   if (localStorage.getItem('projects')) {
-//     const projectList = localStorage.getItem('projects');
-//     console.log(JSON.parse(projectList));
-//     console.log(ProjectsList.list());
-//     // for (let i = 0; i < projectList.length; i++) {
-//     //   console.log('test');
-//     // console.log(loopTodos(projectList[i]));
-//     // }
-//   }
-// }
+
 function renderProjects() {
   const addProject = document.querySelector('.new-projects');
   for (let i = 3; i < ProjectsList.list().length; i++) {
     const currentInput = Project(ProjectsList.list()[i].name);
-    // console.log(currentInput.name);
+
     const newButt = document.createElement('button');
     const remButt = document.createElement('button');
     const projDiv = document.createElement('div');
@@ -645,15 +570,12 @@ function renderProjects() {
     remButt.addEventListener('click', removeNewProject);
     projDiv.appendChild(newButt);
     projDiv.appendChild(remButt);
-    // addProjectButt.style.display = 'grid';
+
     addProject.appendChild(projDiv);
     getButtName();
-    // console.log(newButt.textContent);
-  // ProjectsList.addProject(Project(newButt.textContent));
   }
 }
 
-// console.log(ProjectsList.list());
 export {
   createAddProject, getButtName, renderProjects,
 };

@@ -1,7 +1,10 @@
-import Todos from './todos';
 import {
-  createAddProject, Project, getButtName, ProjectsList, loadStorage, renderProjects,
+  createAddProject, getButtName, renderProjects,
 } from './project';
+
+import HeaderIcon from './check.png';
+import InboxIcon from './inbox.png';
+import TodayIcon from './today.png';
 
 function createHeader() {
   const header = document.createElement('div');
@@ -10,6 +13,10 @@ function createHeader() {
   header.classList = 'header';
   title.textContent = 'TODO LIST';
   header.appendChild(title);
+
+  const headerIcon = new Image();
+  headerIcon.src = HeaderIcon;
+  header.appendChild(headerIcon);
 
   return header;
 }
@@ -23,11 +30,16 @@ function createSidebar() {
   const projectsTitle = document.createElement('h2');
   const today = document.createElement('button');
   const thisWeek = document.createElement('button');
+  const inboxDiv = document.createElement('div');
 
   today.textContent = 'Today';
   today.classList = 'default-project-butt';
   today.setAttribute('id', 'today');
   today.dataset.projectbutt = '';
+
+  const todayIcon = new Image();
+  todayIcon.src = TodayIcon;
+  // today.appendChild(todayIcon);
 
   thisWeek.textContent = 'This Week';
   thisWeek.classList = 'default-project-butt';
@@ -47,6 +59,13 @@ function createSidebar() {
   inbox.classList = 'default-project-butt';
   inbox.setAttribute('id', 'inbox');
   inbox.dataset.projectbutt = '';
+
+  const inboxIcon = new Image();
+  inboxIcon.src = InboxIcon;
+
+  inboxDiv.classList = 'inbox-butt-container';
+  inboxDiv.appendChild(inboxIcon);
+  inboxDiv.appendChild(inbox);
 
   defaultDiv.appendChild(inbox);
   defaultDiv.appendChild(today);
