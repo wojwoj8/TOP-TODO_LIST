@@ -184,19 +184,24 @@ function getButtName() {
     if (!e.hasAttribute('data-clicked')) {
       e.setAttribute('data-clicked', 'true');
       e.parentElement.addEventListener('click', () => {
+        try {
+          e.parentElement.classList += ' active';
+          console.log(e);
+        } catch (TypeError) {
+          return;
+        }
         const active = document.querySelector('.active');
         if (active !== null) {
           console.log(active);
-          active.classList = 'proj-container';
+          if (document.querySelector('.user-proj active') === 1) {
+            document.querySelector('.user-proj active').classList = 'user-proj';
+            console.log(document.querySelector('.user-proj active').classList);
+          }
+          // active.classList = 'proj-container';
         }
         const mainContent = document.querySelector('.main-content');
         mainContent.innerHTML = '';
         // REMOVE BUTTON AND FORM FROM TODAY AND THIS WEEK
-        try {
-          e.parentElement.classList += ' active';
-        } catch (TypeError) {
-          return;
-        }
 
         if (e.id === 'thisWeek' || e.id === 'today') {
           addTodoButton(e);

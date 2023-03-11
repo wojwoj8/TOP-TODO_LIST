@@ -56,7 +56,7 @@ body{
     background-color: var(--hoverColor);
 }
 .active{
-    background-color: var(--hoverColor);
+    background-color: var(--hoverColor) !important;
 }
 .proj-container img{
     margin-right: 10px;
@@ -94,7 +94,21 @@ body{
 .user-proj img{
     margin-right: 5px;
 }
-.user-proj img:hover{
+#butt-div{
+    margin-top:5px;
+}
+#butt-add{
+    width:4rem;
+    margin-right:5px;
+    text-align: center !important;
+}
+#butt-cancel{
+    width:4rem;
+    margin-left:5px;
+    text-align: center !important;
+}
+#input-div{
+
 }
 
 /* MAIN PART */
