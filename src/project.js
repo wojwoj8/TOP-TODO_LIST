@@ -2,6 +2,8 @@ import {
   parseISO, format, differenceInDays,
 } from 'date-fns';
 import Todos from './todos';
+import RemoveIcon from './remove.png';
+import RemoveHoverIcon from './removeHover.png';
 // SINGLE PROJECT OBJECT, TODO CONTAINS TODO OBJECTS
 const Project = (name) => {
   const todo = [];
@@ -231,7 +233,7 @@ function getButtName() {
 function createAddProject() {
   const inputDiv = document.createElement('div');
   const buttDiv = document.createElement('div');
-  const addProjectButt = document.getElementById('add-project');
+  const addProjectButt = document.getElementById('add-project').parentElement;
   const addProject = document.querySelector('.new-projects');
   const inputField = document.createElement('input');
   const addButt = document.createElement('button');
@@ -245,7 +247,7 @@ function createAddProject() {
   cancelButt.setAttribute('id', 'butt-cancel');
 
   const cancelListener = () => {
-    addProjectButt.style.display = 'grid';
+    addProjectButt.style.display = 'flex';
     inputField.value = '';
     inputDiv.remove();
     cancelButt.removeEventListener('click', cancelListener);
@@ -258,22 +260,31 @@ function createAddProject() {
       alert('Project name cannot repeat');
     } else if (currentInput !== '') {
       const newButt = document.createElement('div');
-      const remButt = document.createElement('button');
+      const remButt = new Image();
+      remButt.src = RemoveIcon;
+
+      remButt.classList = 'remove-proj-butt';
       const projDiv = document.createElement('div');
-      projDiv.classList = 'proj-container';
+      projDiv.classList = 'user-proj';
       newButt.classList = 'new-proj-butt';
       newButt.textContent = inputField.value;
       newButt.dataset.projectbutt = '';
-      remButt.textContent = 'X';
       projDiv.appendChild(newButt);
       projDiv.appendChild(remButt);
-      addProjectButt.style.display = 'grid';
+      addProjectButt.style.display = 'flex';
       addProject.appendChild(projDiv);
       inputField.value = '';
       inputDiv.remove();
       getButtName();
 
       ProjectsList.addProjectToStorage(Project(newButt.textContent));
+
+      remButt.addEventListener('mouseover', () => {
+        remButt.src = RemoveHoverIcon;
+      });
+      remButt.addEventListener('mouseleave', () => {
+        remButt.src = RemoveIcon;
+      });
 
       remButt.addEventListener('click', removeNewProject);
       cancelButt.removeEventListener('click', cancelListener);
@@ -575,19 +586,27 @@ function renderProjects() {
   for (let i = 3; i < ProjectsList.list().length; i++) {
     const currentInput = Project(ProjectsList.list()[i].name);
 
-    const newButt = document.createElement('button');
-    const remButt = document.createElement('button');
+    const newButt = document.createElement('div');
+    const remButt = new Image();
+    remButt.src = RemoveIcon;
     const projDiv = document.createElement('div');
+    projDiv.classList = 'user-proj';
     newButt.classList = 'new-proj-butt';
     newButt.textContent = currentInput.name;
     newButt.dataset.projectbutt = '';
-    remButt.textContent = 'X';
+    remButt.classList = 'remove-proj-butt';
     remButt.addEventListener('click', removeNewProject);
     projDiv.appendChild(newButt);
     projDiv.appendChild(remButt);
 
     addProject.appendChild(projDiv);
     getButtName();
+    remButt.addEventListener('mouseover', () => {
+      remButt.src = RemoveHoverIcon;
+    });
+    remButt.addEventListener('mouseleave', () => {
+      remButt.src = RemoveIcon;
+    });
   }
 }
 

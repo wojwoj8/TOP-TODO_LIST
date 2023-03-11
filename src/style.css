@@ -2,9 +2,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&family=Tilt+Warp&display=swap');
 
 :root{
+    font-family: roboto;
     --mainPadding: 0 4rem;
     --headerColor: #6d28d9;
     --sidebarColor: #f4f4f5;
+    --hoverColor: #bebebe;
 }
 body{
     height: 100vh;
@@ -48,13 +50,13 @@ body{
     align-items: center;
     margin-bottom: 5px;
     border: 1px solid black;
-    font-family: 'Roboto';
+   
 }
 .proj-container:hover{
-    background-color: #bebebe;
+    background-color: var(--hoverColor);
 }
 .active{
-    background-color: #bebebe;
+    background-color: var(--hoverColor);
 }
 .proj-container img{
     margin-right: 10px;
@@ -73,8 +75,26 @@ body{
     display: flex;
     flex-direction: column;
 }
-.new-projects{
+.new-projects h2{
+    
+}
 
+.user-proj {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    background-color: var(--sidebarColor);
+    justify-content: space-between;
+    padding-left: 10px;
+    border: 1px solid black;
+}
+.user-proj:hover{
+    background-color: var(--hoverColor);
+}
+.user-proj img{
+    margin-right: 5px;
+}
+.user-proj img:hover{
 }
 
 /* MAIN PART */

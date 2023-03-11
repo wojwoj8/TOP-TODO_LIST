@@ -1,3 +1,4 @@
+import { add } from 'date-fns';
 import {
   createAddProject, getButtName, renderProjects,
 } from './project';
@@ -6,6 +7,7 @@ import HeaderIcon from './check.png';
 import InboxIcon from './inbox.png';
 import TodayIcon from './today.png';
 import ThisWeekIcon from './thisWeek.png';
+import AddIcon from './add.png';
 
 function createHeader() {
   const header = document.createElement('div');
@@ -34,7 +36,9 @@ function createSidebar() {
   const inboxDiv = document.createElement('div');
   const todayDiv = document.createElement('div');
   const thisWeekDiv = document.createElement('div');
+  const addProjectDiv = document.createElement('div');
 
+  addProjectDiv.classList = 'proj-container';
   todayDiv.classList = 'proj-container';
   thisWeekDiv.classList = 'proj-container';
 
@@ -64,9 +68,15 @@ function createSidebar() {
 
   projectsTitle.textContent = 'Projects';
 
+  const addIcon = new Image();
+  addIcon.src = AddIcon;
+  addProjectDiv.appendChild(addIcon);
+
   addproject.textContent = 'Add Project';
   addproject.classList = 'add-project-butt';
   addproject.setAttribute('id', 'add-project');
+
+  addProjectDiv.appendChild(addproject);
 
   inbox.textContent = 'Inbox';
   inbox.classList = 'default-project-butt';
@@ -85,7 +95,7 @@ function createSidebar() {
   defaultDiv.appendChild(thisWeekDiv);
 
   newProjectsDiv.appendChild(projectsTitle);
-  newProjectsDiv.appendChild(addproject);
+  newProjectsDiv.appendChild(addProjectDiv);
 
   sidebar.classList = 'sidebar';
   sidebar.appendChild(defaultDiv);
