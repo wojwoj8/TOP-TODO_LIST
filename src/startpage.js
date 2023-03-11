@@ -5,6 +5,7 @@ import {
 import HeaderIcon from './check.png';
 import InboxIcon from './inbox.png';
 import TodayIcon from './today.png';
+import ThisWeekIcon from './thisWeek.png';
 
 function createHeader() {
   const header = document.createElement('div');
@@ -25,12 +26,17 @@ function createSidebar() {
   const sidebar = document.createElement('div');
   const defaultDiv = document.createElement('div');
   const newProjectsDiv = document.createElement('div');
-  const inbox = document.createElement('button');
-  const addproject = document.createElement('button');
+  const inbox = document.createElement('div');
+  const addproject = document.createElement('div');
   const projectsTitle = document.createElement('h2');
-  const today = document.createElement('button');
-  const thisWeek = document.createElement('button');
+  const today = document.createElement('div');
+  const thisWeek = document.createElement('div');
   const inboxDiv = document.createElement('div');
+  const todayDiv = document.createElement('div');
+  const thisWeekDiv = document.createElement('div');
+
+  todayDiv.classList = 'proj-container';
+  thisWeekDiv.classList = 'proj-container';
 
   today.textContent = 'Today';
   today.classList = 'default-project-butt';
@@ -39,12 +45,19 @@ function createSidebar() {
 
   const todayIcon = new Image();
   todayIcon.src = TodayIcon;
-  // today.appendChild(todayIcon);
+  todayDiv.appendChild(todayIcon);
+
+  todayDiv.appendChild(today);
 
   thisWeek.textContent = 'This Week';
   thisWeek.classList = 'default-project-butt';
   thisWeek.setAttribute('id', 'thisWeek');
   thisWeek.dataset.projectbutt = '';
+
+  const thisWeekIcon = new Image();
+  thisWeekIcon.src = ThisWeekIcon;
+  thisWeekDiv.appendChild(thisWeekIcon);
+  thisWeekDiv.appendChild(thisWeek);
 
   newProjectsDiv.classList = 'new-projects';
   defaultDiv.classList = 'default-projects';
@@ -63,13 +76,13 @@ function createSidebar() {
   const inboxIcon = new Image();
   inboxIcon.src = InboxIcon;
 
-  inboxDiv.classList = 'inbox-butt-container';
+  inboxDiv.classList = 'proj-container';
   inboxDiv.appendChild(inboxIcon);
   inboxDiv.appendChild(inbox);
 
-  defaultDiv.appendChild(inbox);
-  defaultDiv.appendChild(today);
-  defaultDiv.appendChild(thisWeek);
+  defaultDiv.appendChild(inboxDiv);
+  defaultDiv.appendChild(todayDiv);
+  defaultDiv.appendChild(thisWeekDiv);
 
   newProjectsDiv.appendChild(projectsTitle);
   newProjectsDiv.appendChild(addproject);

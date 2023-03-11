@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&family=Tilt+Warp&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&family=Tilt+Warp&display=swap');
+
 :root{
     --mainPadding: 0 4rem;
     --headerColor: #6d28d9;
@@ -41,7 +43,23 @@ body{
     background-color: var(--sidebarColor);
     grid-area: sidebar;
 }
-
+.proj-container{
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    border: 1px solid black;
+    font-family: 'Roboto';
+}
+.proj-container:hover{
+    background-color: #bebebe;
+}
+.active{
+    background-color: #bebebe;
+}
+.proj-container img{
+    margin-right: 10px;
+    margin-left: 10px;
+}
 .default-projects{
     margin-top: 2rem;
 }
@@ -49,7 +67,6 @@ body{
     text-align: left;
     height: 2rem;
     /* border:0; */
-    background-color: var(--sidebarColor);
 }
 
 .default-projects, .new-projects{

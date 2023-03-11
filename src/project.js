@@ -181,8 +181,21 @@ function getButtName() {
   buttons.forEach((e) => {
     if (!e.hasAttribute('data-clicked')) {
       e.setAttribute('data-clicked', 'true');
-      e.addEventListener('click', () => {
+      e.parentElement.addEventListener('click', () => {
+        const active = document.querySelector('.active');
+        if (active !== null) {
+          console.log(active);
+          active.classList = 'proj-container';
+        }
+        const mainContent = document.querySelector('.main-content');
+        mainContent.innerHTML = '';
         // REMOVE BUTTON AND FORM FROM TODAY AND THIS WEEK
+        try {
+          e.parentElement.classList += ' active';
+        } catch (TypeError) {
+          return;
+        }
+
         if (e.id === 'thisWeek' || e.id === 'today') {
           addTodoButton(e);
           const button = document.querySelector('.add-Todo');
@@ -244,14 +257,14 @@ function createAddProject() {
     if (ProjectsList.getProject(currentInput)) {
       alert('Project name cannot repeat');
     } else if (currentInput !== '') {
-      const newButt = document.createElement('button');
+      const newButt = document.createElement('div');
       const remButt = document.createElement('button');
       const projDiv = document.createElement('div');
+      projDiv.classList = 'proj-container';
       newButt.classList = 'new-proj-butt';
       newButt.textContent = inputField.value;
       newButt.dataset.projectbutt = '';
       remButt.textContent = 'X';
-      remButt.addEventListener('click', removeNewProject);
       projDiv.appendChild(newButt);
       projDiv.appendChild(remButt);
       addProjectButt.style.display = 'grid';
@@ -262,6 +275,7 @@ function createAddProject() {
 
       ProjectsList.addProjectToStorage(Project(newButt.textContent));
 
+      remButt.addEventListener('click', removeNewProject);
       cancelButt.removeEventListener('click', cancelListener);
       addButt.removeEventListener('click', addListener);
     } else {
@@ -286,11 +300,12 @@ function removeNewProject(e) {
   const projButt = e.target.parentElement.firstChild;
   const mainContent = document.querySelector('.main-content');
   const mainTitle = document.querySelector('.main-title');
-  mainTitle.textContent = '';
-  mainContent.innerHTML = '';
 
   ProjectsList.removeProjectFromStorage(projButt.textContent);
+  projButt.remove();
   projDiv.remove();
+  mainTitle.textContent = '';
+  mainContent.innerHTML = '';
 }
 
 function addTodoButton(e) {
