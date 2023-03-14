@@ -185,17 +185,31 @@ function getButtName() {
       e.setAttribute('data-clicked', 'true');
       e.parentElement.addEventListener('click', () => {
         try {
-          e.parentElement.classList += ' active';
-          console.log(e);
+          const allActive = document.querySelectorAll('.active');
+          if (allActive.length > 0) {
+            console.log(allActive[0].parentElement.className);
+            if (allActive[0].parentElement.className === 'default-projects') {
+              allActive[0].classList = 'proj-container';
+            } else {
+              allActive[0].classList = 'user-proj';
+            }
+            e.parentElement.classList += ' active';
+          } else {
+            e.parentElement.classList += ' active';
+          }
+
+          // console.log(`tst${document.querySelector('.user-proj active').classList}`);
+          // console.log(e);
+          // console.log(document.querySelectorAll('.active'));
         } catch (TypeError) {
           return;
         }
         const active = document.querySelector('.active');
         if (active !== null) {
-          console.log(active);
+          // console.log(active);
           if (document.querySelector('.user-proj active') === 1) {
             document.querySelector('.user-proj active').classList = 'user-proj';
-            console.log(document.querySelector('.user-proj active').classList);
+            console.log(`tst${document.querySelector('.user-proj active').classList}`);
           }
           // active.classList = 'proj-container';
         }
@@ -473,6 +487,7 @@ function loopTodos(project) {
       }
       del.addEventListener('click', () => {
         ProjectsList.removeTodoFromStorage(project, title);
+        todoButton.style.display = 'inline';
         loopTodos(project);
       });
       edit.addEventListener('click', (e) => {
@@ -494,6 +509,7 @@ function loopTodos(project) {
         });
       });
       remTodo.addEventListener('click', () => {
+        todoButton.style.display = 'inline';
         loopTodos(project);
       });
     });
