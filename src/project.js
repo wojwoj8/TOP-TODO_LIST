@@ -443,6 +443,7 @@ function loopTodos(project) {
 
     const remTodo = new Image();
     remTodo.src = TodoDots;
+    remTodo.classList = 'remove-Todo';
     todoDiv.classList = 'todos-container';
     remTodo.textContent = 'X';
     remTodo.addEventListener('mouseover', () => {
@@ -486,9 +487,9 @@ function loopTodos(project) {
     const del = document.createElement('button');
     const addTodo = document.querySelector('.add-Todo');
     edit.classList = 'editTodo';
-    edit.textContent = 'edit';
+    edit.textContent = 'Edit';
     del.classList = 'deleteTodo';
-    del.textContent = 'delete';
+    del.textContent = 'Delete';
 
     remTodo.addEventListener('click', () => {
       remTodoDiv.appendChild(edit);
@@ -571,14 +572,14 @@ function editForm(project, title) {
       <textarea class="textarea" name="textarea" rows="4" cols="50" placeholder="Description">${object.description}</textarea>
   </div>
   <div class="form-selects">
-      <label for="priority">Choose Priority:</label>
+      <label for="priority">Priority:</label>
       <select class="form-priority" name="priority" value="${object.priority}"> 
           <option value="Low">Low</option>
           <option value="Medium">Medium</option>
           <option value="High">High</option>
       </select>
 
-      <label for="state">Choose State:</label>
+      <label for="state">State:</label>
       <select class="form-state" name="state" value="${object.state}">
           <option value="Active">Acive</option>
           <option value="Inactive">Inactive</option>
@@ -605,14 +606,14 @@ function createForm() {
       <textarea class="textarea" name="textarea" rows="4" cols="50" placeholder="Description"></textarea>
   </div>
   <div class="form-selects">
-      <label for="priority">Choose Priority:</label>
+      <label for="priority">Priority:</label>
       <select class="form-priority" name="priority">
           <option value="Low">Low</option>
           <option value="Medium">Medium</option>
           <option value="High">High</option>
       </select>
 
-      <label for="state">Choose State:</label>
+      <label for="state">State:</label>
       <select class="form-state" name="state">
           <option value="Active">Acive</option>
           <option value="Inactive">Inactive</option>

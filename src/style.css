@@ -3,7 +3,7 @@
 
 :root{
     font-family: roboto;
-    --mainPadding: 0 4rem;
+    --mainPadding: calc(min(10vw + 150px, 10%));
     --headerColor: #6d28d9;
     --sidebarColor: #f4f4f5;
     --hoverColor: #bebebe;
@@ -11,6 +11,7 @@
 body{
     height: 100vh;
     margin:0;
+    min-width: 650px;
     /* background-color: red; */
 }
 #content{
@@ -43,6 +44,7 @@ body{
 
 .sidebar{
     background-color: var(--sidebarColor);
+    min-width: 175px;
     grid-area: sidebar;
 }
 .proj-container{
@@ -114,7 +116,7 @@ body{
 /* MAIN PART */
 .main{
     grid-area: main;
-    padding: var(--mainPadding);
+    padding: 0 var(--mainPadding);
 }
 .main-title{
     display: flex;
@@ -125,11 +127,44 @@ body{
     font-size: larger;
     font-weight: bolder;
 }
+.editTodo, .deleteTodo{
+    width:100%;
+    color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: var(--headerColor);
+}
+.editTodo:hover, .deleteTodo:hover, .form-submit:hover, .form-cancel:hover{
+    background-color: #6c28d9d8;
+}
+.form-inputs, .form-textarea{
+    display:flex;
+    flex-direction: column;
+}
+.form-inputs input, .form-textarea textarea, .form-selects select{
+    border:2px solid black;
+}
 
+form label, .form-textarea label{
+    text-align: left;
+}
+.form-selects{
+    margin-top: 0.5rem;
+}
+
+.form-submit, .form-cancel{
+    width:50%;
+    color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: var(--headerColor);
+}
 /* FOOTER PART */
 .footer{
     background-color: green;
     grid-area: footer;
+    font-size: larger;
+    font-weight: bold;
 }
 
 /* TODOS PART */
@@ -141,7 +176,7 @@ body{
     display:flex;
 }
 .todoTitleDescContainer{
-    width:90%;
+    width: clamp(10vw,80%, 90%);
     text-align: left;
 }
 .todoTitle > h2{
@@ -158,9 +193,9 @@ body{
     margin: 5px 0;
 }
 .todoDatePrioContainer{
-    width:10%;
+    width:15%;
+    min-width: 115px;
     display: flex;
-    
     flex-direction: column;
 }
 .todoPriority > p{
@@ -168,6 +203,7 @@ body{
 }
 .remTodoDiv{
     width:8%;
+    min-width: 30px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
