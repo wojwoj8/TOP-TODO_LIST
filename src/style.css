@@ -116,6 +116,15 @@ body{
     grid-area: main;
     padding: var(--mainPadding);
 }
+.main-title{
+    display: flex;
+    font-family: 'Tilt Warp';
+    font-size: 2rem;
+}
+.add-Todo{
+    font-size: larger;
+    font-weight: bolder;
+}
 
 /* FOOTER PART */
 .footer{

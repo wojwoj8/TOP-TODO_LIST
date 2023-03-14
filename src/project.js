@@ -4,6 +4,8 @@ import {
 import Todos from './todos';
 import RemoveIcon from './remove.png';
 import RemoveHoverIcon from './removeHover.png';
+import TodoDots from './todoDots.png';
+import TodoDotsHover from './todoDotsHover.png';
 // SINGLE PROJECT OBJECT, TODO CONTAINS TODO OBJECTS
 const Project = (name) => {
   const todo = [];
@@ -348,7 +350,7 @@ function addTodoButton(e) {
   mainContent.innerHTML = '';
   const projectName = e.innerHTML;
   button.classList = 'add-Todo';
-  button.textContent = 'Add todos';
+  button.textContent = 'Add New Task';
   button.dataset.name = projectName;
   mainContent.appendChild(button);
   mainContent.appendChild(todosDiv);
@@ -361,6 +363,13 @@ function addTodoButton(e) {
 
     const formSubmit = document.querySelector('.form-submit');
     formSubmit.addEventListener('click', formHandler);
+
+    const cancel = document.querySelector('.form-cancel');
+    cancel.addEventListener('click', () => {
+      button.style.display = 'inline';
+      formDiv.remove();
+      loopTodos(projectName);
+    });
   });
 }
 // HERE NEED TO TAKE INPUTS AND CREATE TODO AND REMOVE FORM
@@ -432,10 +441,16 @@ function loopTodos(project) {
     const remTodoDiv = document.createElement('div');
     remTodoDiv.classList = 'remTodoDiv';
 
-    const remTodo = document.createElement('div');
-    remTodo.classList = 'remove-Todo';
+    const remTodo = new Image();
+    remTodo.src = TodoDots;
     todoDiv.classList = 'todos-container';
     remTodo.textContent = 'X';
+    remTodo.addEventListener('mouseover', () => {
+      remTodo.src = TodoDotsHover;
+    });
+    remTodo.addEventListener('mouseleave', () => {
+      remTodo.src = TodoDots;
+    });
     let todosClass = 'todoTitleDescContainer';
 
     if (proj[i].getState() === 'Inactive') {
@@ -507,6 +522,12 @@ function loopTodos(project) {
             ProjectsList.addTodoToStorageEdit(project, object);
           }
         });
+        const cancel = document.querySelector('.form-cancel');
+        cancel.addEventListener('click', () => {
+          todoButton.style.display = 'inline';
+          formDiv.remove();
+          loopTodos(project);
+        });
       });
       remTodo.addEventListener('click', () => {
         todoButton.style.display = 'inline';
@@ -563,7 +584,8 @@ function editForm(project, title) {
           <option value="Inactive">Inactive</option>
       </select>
   </div>
-  <input class="form-submit" type="submit" value="Submit">
+  <input class="form-submit" type="submit" value="Add">
+  <input class="form-cancel" type="button" value="Cancel">
 </form>`;
   formDiv.innerHTML = formContent;
   return formDiv;
@@ -596,7 +618,8 @@ function createForm() {
           <option value="Inactive">Inactive</option>
       </select>
   </div>
-  <input class="form-submit" type="submit" value="Submit">
+  <input class="form-submit" type="submit" value="Add">
+  <input class="form-cancel" type="button" value="Cancel">
 </form>`;
   formDiv.innerHTML = formContent;
   return formDiv;
